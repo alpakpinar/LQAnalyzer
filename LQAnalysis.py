@@ -94,13 +94,12 @@ class LQAnalysis(Module):
 	genJets = Collection(event, 'GenJet')
 	eventSum = ROOT.TLorentzVector()
 
-        self.luminosity = 36400
-	self.ggHcross_section = 43.92
-	self.numHiggsEvents = 994000
-	self.higgsNormWeight = self.ggHcross_section*self.luminosity/self.numHiggsEvents
+        #self.luminosity = 36400
+	#self.ggHcross_section = 43.92
+	#self.numHiggsEvents = 994000
+	#self.higgsNormWeight = self.ggHcross_section*self.luminosity/self.numHiggsEvents
 
 	self.eventCounts[0] += 1
-	self.cutNames.append('No Cut')	
 	
 	#ET_miss Triggers
 	trigger_pass = (event.HLT_PFMETNoMu120_PFMHTNoMu120_IDTight == 1) or (event.HLT_PFMETNoMu130_PFMHTNoMu130_IDTight == 1) or (event.HLT_PFMETNoMu140_PFMHTNoMu140_IDTight == 1)
@@ -108,7 +107,6 @@ class LQAnalysis(Module):
 	if not trigger_pass: return False
 
 	self.eventCounts[1] += 1
-	self.cutNames.append('HLT')
 	
 	#############
 
@@ -120,27 +118,21 @@ class LQAnalysis(Module):
 	if event.Flag_EcalDeadCellTriggerPrimitiveFilter != 1: return False
 	if event.Flag_BadPFMuonFilter != 1: return False
 	self.eventCounts[2] += 1
-	self.cutNames.append('Filters')
 
 	############
 
 	if event.MET_pt <= 250: return False #MET larger than 250 GeV 
 
 	self.eventCounts[3] += 1
-	self.cutNames.append('MET')
 
         if len(jets) != 0:
 	    if not (jets[0].pt > 100 and abs(jets[0].eta) < 2.5): return False #Leading jet requirements
             self.eventCounts[4] += 1
-	    self.cutNames.append('LJ_pT,eta')
 	    if not (jets[0].chHEF > 0.1 and jets[0].neHEF < 0.8): return False
 	    self.eventCounts[5] += 1 
-	    self.cutNames.append('LJ_CHF,NHF')
 	if abs(event.CaloMET_sumEt - event.MET_sumEt)/event.CaloMET_sumEt >= 0.5: return False #check if the PF MET is correct!	
 	
 	self.eventCounts[6] += 1	
-	self.cutNames.append('CaloMET-PFMET')
-
 
 	#AK4 jet requirements
 	self.ak4Jets = [jet for jet in jets if (abs(jet.eta) < 2.5 and jet.pt > 30)]
@@ -182,16 +174,12 @@ class LQAnalysis(Module):
 	#Vetoing events with loose leptons or photons
 	if self.nLoosePhotons != 0: return False
 	self.eventCounts[7] += 1 
-	self.cutNames.append('Loose Ph')
 	if self.nLooseElectrons != 0: return False
 	self.eventCounts[8] += 1
-	self.cutNames.append('Loose El') 	
 	if self.nLooseMuons != 0: return False
 	self.eventCounts[9] += 1
-	self.cutNames.append('Loose Mu')
 	if self.nLooseTaus != 0: return False
 	self.eventCounts[10] += 1 
-	self.cutNames.append('Loose Tau')
 	#############	
 
 
@@ -220,7 +208,6 @@ class LQAnalysis(Module):
             if min(self.phiDiff) < 0.5: return False
 
 	self.eventCounts[11] += 1
-	self.cutNames.append('Jet-MET Phi')
 	
 	###############
 	self.num_bjets = 0
@@ -234,21 +221,15 @@ class LQAnalysis(Module):
 	if self.num_bjets != 0: return False
 
 	self.eventCounts[12] += 1
-	self.cutNames.append('b-jet')
 
 	##############
 	
 	x = arange(len(self.eventCounts))
 
 	self.eventCountGraph.SetNameTitle('evtCounts', 'Event Counts After Each Cut, M = ' + self.LQMass + ' #lambda = ' + str(self.LQCoupling))	
-	self.eventCountGraph.SetMarkerStyle(21)
-
-	x_axis = self.eventCountGraph.GetXaxis()
-	x_axis.Set(13, 0, 12) 
 
 	for i in range(len(self.eventCounts)):
 	    self.eventCountGraph.SetPoint(i, x[i], self.eventCounts[i])    
-	    x_axis.SetBinLabel(i+1, self.cutNames[i])
 		
 	self.leadingJetPt.Fill(jets[0].pt)	
      	 	

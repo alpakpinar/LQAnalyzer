@@ -10,6 +10,7 @@ evtCountsGraph = mydir.Get('evtCounts')
 cut_names = ['No Cut', 'HLT', 'Filters', 'MET', 'LJ_pT,eta', 'LJ_CHF,NHF', 'CaloMET-PFMET', 'Loose Ph', 'Loose El', 'Loose Mu', 'Loose Tau', 'Jet-MET Phi', 'b-jet'] 
 x = arange(evtCountsGraph.GetN())
 
+evtCountsGraph.SetMarkerStyle(21)
 num_events = evtCountsGraph.GetY()[0]
 #print(evtCountsGraph.GetN())
 
