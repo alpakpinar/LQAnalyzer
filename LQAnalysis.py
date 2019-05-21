@@ -94,13 +94,8 @@ class LQAnalysis(Module):
 	genJets = Collection(event, 'GenJet')
 	eventSum = ROOT.TLorentzVector()
 
-        #self.luminosity = 36400
-	#self.ggHcross_section = 43.92
-	#self.numHiggsEvents = 994000
-	#self.higgsNormWeight = self.ggHcross_section*self.luminosity/self.numHiggsEvents
-
 	self.eventCounts[0] += 1
-	
+
 	#ET_miss Triggers
 	trigger_pass = (event.HLT_PFMETNoMu120_PFMHTNoMu120_IDTight == 1) or (event.HLT_PFMETNoMu130_PFMHTNoMu130_IDTight == 1) or (event.HLT_PFMETNoMu140_PFMHTNoMu140_IDTight == 1)
 
