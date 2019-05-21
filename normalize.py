@@ -4,7 +4,7 @@ filename = 'LQ_1_4TeV_1_histOut_all.root'
 infile = ROOT.TFile.Open(filename, 'UPDATE')
 mydir = infile.plots
 
-cross_section = 0.000891
+cross_section = 0.01542
 luminosity = 35900
 num_events_gen = 49000
 
@@ -49,10 +49,27 @@ jetMET_hist.Write()
 #Number of b-jets
 canv6 = ROOT.TCanvas('canv6', 'canv6')
 numbJets_hist = mydir.Get('numbJets')
-bin_width_numbJets = numbJets_hist.GetBinWidth(1)
-numbJets_hist.Scale(norm_weight/bin_width_numbJets)
+numbJets_hist.Scale(norm_weight)
 numbJets_hist.Draw("Hist")
 canv6.Print("numbJets_1_4TeV_1.png")
 numbJets_hist.Write()
+
+#Number of Leptoquarks
+canv7 = ROOT.TCanvas('canv7', 'canv7')
+numLQ_hist = mydir.Get('numLQ')
+numLQ_hist.Scale(norm_weight)
+numLQ_hist.Draw("Hist")
+canv7.Print("numLQ_1_4TeV_1.png")
+numLQ_hist.Write()
+
+#Number of u Jets
+canv8 = ROOT.TCanvas('canv8', 'canv8')
+num_uJets_hist = mydir.Get('num_uJets')
+num_uJets_hist.Scale(norm_weight)
+num_uJets_hist.Draw("Hist")
+canv8.Print("num_uJets_1_4TeV_1.png")
+num_uJets_hist.Write()
+
+
 
 
