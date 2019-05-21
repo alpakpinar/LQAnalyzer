@@ -19,17 +19,6 @@ class LQAnalysis(Module):
     def beginJob(self,histFile=None,histDirName=None):
         Module.beginJob(self,histFile,histDirName)
 	
-	#canv = ROOT.TCanvas('canvas','canvas')
-	#style = ROOT.TStyle('style', 'style')
-	
-	#style.SetHistFillColor(2)
-	#style.SetHistFillStyle(1)
-	#style.SetHistLineColor(1)
-	#style.SetHistLineStyle(0)
-	#style.SetHistLineWidth(1)
-	#style.cd()
-	#canv.UseCurrentStyle()
-
 	self.LQMass = '1.4 TeV'
 	self.LQCoupling = 1.0
 
