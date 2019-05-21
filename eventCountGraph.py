@@ -4,7 +4,7 @@ from numpy import arange
 filename = 'LQ_1_4TeV_1_histOut_all.root'
 infile = ROOT.TFile.Open(filename, 'UPDATE')
 mydir = infile.plots
-#mydir.cd()
+mydir.cd()
 
 evtCountsGraph = mydir.Get('evtCounts')
 cut_names = ['No Cut', 'HLT', 'Filters', 'MET', 'LJ_pT,eta', 'LJ_CHF,NHF', 'CaloMET-PFMET', 'Loose Ph', 'Loose El', 'Loose Mu', 'Loose Tau', 'Jet-MET Phi', 'b-jet'] 

@@ -10,6 +10,8 @@ num_events_gen = 49000
 
 norm_weight = cross_section*luminosity/num_events_gen
 
+mydir.cd()
+
 #MET Histogram
 canv2 = ROOT.TCanvas('canv2', 'canv2')
 METHist = mydir.Get('MET')
