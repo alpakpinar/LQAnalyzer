@@ -145,14 +145,14 @@ class LQAnalysis(Module):
 	        self.nLooseElectrons += 1
 
 	#Calculate the number of loose muons
-	for mu in self.non_ovr_muons:
-	    if ((mu.isGlobal == 1) or (mu.isTracker == 1)) and (mu.isPFcand == 1) and (mu.pfRelIso04_all < 0.25):		
-	    	self.nLooseMuons += 1
+	#for mu in self.non_ovr_muons:
+	#    if ((mu.isGlobal == 1) or (mu.isTracker == 1)) and (mu.isPFcand == 1) and (mu.pfRelIso04_all < 0.25):		
+	#    	self.nLooseMuons += 1
 	
 	#For Higgs 2017 sample
-	#for mu in self.non_ovr_muons:
-	#    if (mu.softId == 1) and (mu.isPFcand == 1) and (mu.pfRelIso04_all < 0.25): 
-        #	self.nLooseMuons += 1
+	for mu in self.non_ovr_muons:
+	    if (mu.softId == 1) and (mu.isPFcand == 1) and (mu.pfRelIso04_all < 0.25): 
+        	self.nLooseMuons += 1
 
 	#Calculate the number of loose taus
 	for tau in self.non_ovr_taus:
@@ -193,7 +193,7 @@ class LQAnalysis(Module):
 
 	else:
 	    for i in range(4):
-		phi_difference = abs(jet.phi - event.MET_phi)
+		phi_difference = abs(jets[i].phi - event.MET_phi)
 		if phi_difference <= math.pi:
 		    self.phiDiff.append(phi_difference)
 	  	else:
@@ -207,7 +207,7 @@ class LQAnalysis(Module):
 	###############
 	self.num_bjets = 0
 	for jet in self.ak4Jets:
-	    if abs(jet.eta) < 2.4 and jet.btagCSVV2 > 0.84:
+	    if abs(jet.eta) < 2.4 and jet.pt > 20 and jet.btagCSVV2 > 0.8484:
 		self.num_bjets += 1
 	
 	self.num_bJets.Fill(self.num_bjets)
@@ -265,10 +265,10 @@ class LQAnalysis(Module):
 
 higgsfile = ['root://cmsxrootd.fnal.gov///store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/866B463C-D124-E911-B9F3-0CC47A1E0748.root']
 
-#Higgs2017Files = ['/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/866B463C-D124-E911-B9F3-0CC47A1E0748.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/AC59921F-CF24-E911-9390-008CFAF7174A.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/AA678DF5-9125-E911-B693-5065F3818271.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/9AD9EDBF-AB24-E911-87F7-AC1F6BAC815A.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/AE21A571-0425-E911-A9C0-0025905D1CB4.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/DEEA87BD-AA24-E911-940C-1866DA890700.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/30000/20C4D3A3-F928-E911-9B0D-AC1F6B0DE2A2.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/30000/D2F3FEAA-F928-E911-8F98-0242AC1C0502.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/30000/C82464B5-9028-E911-B6D9-001E6750489D.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/30000/9E9C6F17-CB28-E911-A76D-008CFA197C1C.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/2671FB83-AC24-E911-BB24-48D539F38882.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/28C15088-3225-E911-A8A4-001E67E6F8B9.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/705C9948-9125-E911-8058-246E96D10CBC.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/7AFEFCCE-AB24-E911-AB02-C0BFC0E56846.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/7ABE5247-1F1E-E911-883E-20040FE9DE50.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/00EF24C5-C624-E911-A8EA-0242AC1C0501.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/0603DE57-B624-E911-8420-AC1F6B5676BA.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/086D358B-D91E-E911-87B9-0CC47AA989C6.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/1011C8A1-AB24-E911-92C7-0CC47A5FC61D.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/402D5A55-AB24-E911-BE79-002590E2DA08.root']
+Higgs2017Files = ['/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/866B463C-D124-E911-B9F3-0CC47A1E0748.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/AC59921F-CF24-E911-9390-008CFAF7174A.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/AA678DF5-9125-E911-B693-5065F3818271.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/9AD9EDBF-AB24-E911-87F7-AC1F6BAC815A.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/AE21A571-0425-E911-A9C0-0025905D1CB4.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/DEEA87BD-AA24-E911-940C-1866DA890700.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/30000/20C4D3A3-F928-E911-9B0D-AC1F6B0DE2A2.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/30000/D2F3FEAA-F928-E911-8F98-0242AC1C0502.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/30000/C82464B5-9028-E911-B6D9-001E6750489D.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/30000/9E9C6F17-CB28-E911-A76D-008CFA197C1C.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/2671FB83-AC24-E911-BB24-48D539F38882.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/28C15088-3225-E911-A8A4-001E67E6F8B9.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/705C9948-9125-E911-8058-246E96D10CBC.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/7AFEFCCE-AB24-E911-AB02-C0BFC0E56846.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/7ABE5247-1F1E-E911-883E-20040FE9DE50.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/00EF24C5-C624-E911-A8EA-0242AC1C0501.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/0603DE57-B624-E911-8420-AC1F6B5676BA.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/086D358B-D91E-E911-87B9-0CC47AA989C6.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/1011C8A1-AB24-E911-92C7-0CC47A5FC61D.root', '/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/280000/402D5A55-AB24-E911-BE79-002590E2DA08.root']
 
-#for i in range(len(Higgs2017Files)):
-#    Higgs2017Files[i] = 'root://cmsxrootd.fnal.gov//' + Higgs2017Files[i]
+for i in range(len(Higgs2017Files)):
+    Higgs2017Files[i] = 'root://cmsxrootd.fnal.gov//' + Higgs2017Files[i]
 
 #files=glob.glob("root://cmsxrootd.fnal.gov///store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/*")
 #files=["root://cmsxrootd.fnal.gov///store/mc/RunIISummer16NanoAOD/GluGlu_HToInvisible_M125_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/70FE44FE-C912-E811-9525-0CC47A7C3424.root", "root://cmsxrootd.fnal.gov///store/mc/RunIISummer16NanoAOD/GluGlu_HToInvisible_M125_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/E2817A05-CA12-E811-9FAA-0025905B8612.root"]
@@ -278,6 +278,6 @@ trial_file=["/eos/uscms/store/user/aakpinar/SLQ_MCProduction/SLQ_1TeV_0_1/SLQ_Na
 
 files=glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/SLQ_1_4TeV_1/SLQ_1_4TeV_1_NanoAOD/190519_024914/0000/SLQ_1_4TeV_1_RunIIFall17NanoAOD-00027_*")
 
-p=PostProcessor(".",files,branchsel=None,modules=[LQAnalysis()],noOut=True,histFileName="LQ_1_4TeV_1_histOut_all.root",histDirName="plots")
+p=PostProcessor(".",Higgs2017Files,branchsel=None,modules=[LQAnalysis()],noOut=True,histFileName="Higgs2017_histOut_all.root",histDirName="plots")
 p.run()
 		    
