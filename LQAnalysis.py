@@ -256,15 +256,11 @@ class LQAnalysis(Module):
 
 	#Phi difference and eta difference plots for pair production of leptoquarks
 	self.nLeptoquarks = 0
-	self.lqIdx=[]
 	for i in range(len(genParticles)):
 	    if (genParticles[i].pdgId == 1104 or genParticles[i].pdgId == -1104) and genParticles[i].status == 22:
 		self.nLeptoquarks += 1
-		self.lqIdx.append(i)		
 
 	self.genJetsFromU = []
-	self.genJetEtas = []
-	self.genJetPhis = []
 	self.numLQ.Fill(self.nLeptoquarks)	
 	
 	if self.nLeptoquarks == 2: #pair production
