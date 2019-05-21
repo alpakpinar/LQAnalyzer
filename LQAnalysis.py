@@ -228,7 +228,7 @@ class LQAnalysis(Module):
 		    self.phiDiff.append(2*math.pi - phi_difference)
 	    
 	    self.jetMETPhi.Fill(min(self.phiDiff))
-            if abs(self.ak4Jets[i].phi - event.MET_phi) < 0.5: return False
+            if min(self.phiDiff) < 0.5: return False
 
 	self.eventCounts[11] += 1
 	self.cutNames.append('Jet-MET Phi')
