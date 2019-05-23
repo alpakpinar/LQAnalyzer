@@ -278,6 +278,6 @@ trial_file=["/eos/uscms/store/user/aakpinar/SLQ_MCProduction/SLQ_1TeV_0_1/SLQ_Na
 
 files=glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/SLQ_1_4TeV_1/SLQ_1_4TeV_1_NanoAOD_new/190523_034946/0000/SLQ_1_4TeV_1_RunIIFall17NanoAOD-00027_*")
 
-p=PostProcessor(".",Higgs2017Files,branchsel=None,modules=[LQAnalysis()],noOut=True,histFileName="Higgs2017_histOut_all.root",histDirName="plots")
+p=PostProcessor(".",files,branchsel=None,modules=[LQAnalysis()],noOut=True,histFileName="LQ_1_4TeV_1_histOut_all.root",histDirName="plots")
 p.run()
 		    
