@@ -145,14 +145,14 @@ class LQAnalysis(Module):
 	        self.nLooseElectrons += 1
 
 	#Calculate the number of loose muons
-	#for mu in self.non_ovr_muons:
-	#    if ((mu.isGlobal == 1) or (mu.isTracker == 1)) and (mu.isPFcand == 1) and (mu.pfRelIso04_all < 0.25):		
-	#    	self.nLooseMuons += 1
+	for mu in self.non_ovr_muons:
+	    if ((mu.isGlobal == 1) or (mu.isTracker == 1)) and (mu.isPFcand == 1) and (mu.pfRelIso04_all < 0.25):		
+	    	self.nLooseMuons += 1
 	
 	#For Higgs 2017 sample
-	for mu in self.non_ovr_muons:
-	    if (mu.softId == 1) and (mu.isPFcand == 1) and (mu.pfRelIso04_all < 0.25): 
-        	self.nLooseMuons += 1
+	#for mu in self.non_ovr_muons:
+	#    if (mu.softId == 1) and (mu.isPFcand == 1) and (mu.pfRelIso04_all < 0.25): 
+        #	self.nLooseMuons += 1
 
 	#Calculate the number of loose taus
 	for tau in self.non_ovr_taus:
