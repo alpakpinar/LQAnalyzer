@@ -6,7 +6,7 @@ mydir = infile.plots
 
 cross_section = 0.01542
 luminosity = 35900
-num_events_gen = 49000
+num_events_gen = 49500
 
 norm_weight = cross_section*luminosity/num_events_gen
 
