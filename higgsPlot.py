@@ -7,7 +7,7 @@ normWeight = ggHcross_section*luminosity/numHiggsEvents
 
 filename = 'fitDiagnostics.root'
 
-second_file = 'Higgs2017_histOut_all.root'
+second_file = 'Higgs2017_noHLT_histOut_all.root'
 
 infile = ROOT.TFile.Open(filename)
 my_dir = infile.shapes_prefit.GetDirectory('ch1')
@@ -15,7 +15,7 @@ histo = my_dir.Get('ggH_hinv')
 histo.GetXaxis().SetTitle('MET (GeV)')
 
 canv = ROOT.TCanvas('canv', 'canv')
-
+canv.SetLogy()
 histo.Draw()
 
 new_file = ROOT.TFile.Open(second_file, 'UPDATE')
@@ -33,6 +33,15 @@ METHist.Scale(normWeight)
 METHist.Draw("hist same")
 METHist.Write()
 
+
 canv.Print('EventYields_Higgs2017.png')
 
+#new_canv = ROOT.TCanvas('new_canv', 'new_canv')
+
+#metBeforeHist = plotsdir.Get('METBefore')
+#metBeforeHist.Scale(normWeight/metBeforeHist.GetBinWidth(1))
+#metBeforeHist.Draw("hist")
+#metBeforeHist.Write()
+
+#new_canv.Print('METBefore_Higgs2017.png')
 
