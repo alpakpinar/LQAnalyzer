@@ -66,11 +66,16 @@ class LQAnalysis(Module):
 	self.jetMETPhi.GetXaxis().SetTitle('#Delta #phi')
 	self.jetMETPhi.GetYaxis().SetTitle('Number of Events')	
 
+	#For testing Higgs sample
+	self.METBefore=ROOT.TH1F('METBefore', 'MET Before 250 GeV Cut', 25, 0, 1400)
+	self.addObject(self.METBefore)
+	self.METBefore.GetXaxis().SetTitle('MET (GeV)')
+	self.METBefore.GetYaxis().SetTitle('Number of Events')
+
 	self.eventCountGraph=ROOT.TGraph(13)
 	self.addObject(self.eventCountGraph)
 
-	self.eventCounts = zeros(13)
-	self.cutNames = []
+	self.eventCounts = zeros(11)
 
     def deltaR(self,prt1,prt2):
 	eta1, eta2 = prt1.eta, prt2.eta
@@ -115,24 +120,12 @@ class LQAnalysis(Module):
 	self.eventCounts[2] += 1
 
 	############
-
-	if event.MET_pt <= 250: return False #MET larger than 250 GeV 
-
-	self.eventCounts[3] += 1
-
-        if len(jets) != 0:
-	    if not (jets[0].pt > 100 and abs(jets[0].eta) < 2.5): return False #Leading jet requirements
-            self.eventCounts[4] += 1
-	    if not (jets[0].chHEF > 0.1 and jets[0].neHEF < 0.8): return False
-	    self.eventCounts[5] += 1 
-	if abs(event.CaloMET_sumEt - event.MET_sumEt)/event.CaloMET_sumEt >= 0.5: return False #check if the PF MET is correct!	
 	
-	self.eventCounts[6] += 1	
-
+	self.METBefore.Fill(event.MET_pt)	
+	
 	#AK4 jet requirements
 	self.ak4Jets = [jet for jet in jets if (abs(jet.eta) < 2.5 and jet.pt > 30)]
-
-
+	
 	#Taking the non-overlapping leptons/photons
 	self.non_ovr_electrons = [el for el in electrons for jet in self.ak4Jets if self.deltaR(jet,el) > 0.4]
 	self.non_ovr_muons = [mu for mu in muons for jet in self.ak4Jets if self.deltaR(jet,mu) > 0.4]
@@ -152,7 +145,7 @@ class LQAnalysis(Module):
 	#For Higgs 2017 sample
 	#for mu in self.non_ovr_muons:
 	#    if (mu.softId == 1) and (mu.isPFcand == 1) and (mu.pfRelIso04_all < 0.25): 
-        #	self.nLooseMuons += 1
+        # 	self.nLooseMuons += 1
 
 	#Calculate the number of loose taus
 	for tau in self.non_ovr_taus:
@@ -161,26 +154,56 @@ class LQAnalysis(Module):
 
 	#Calculate the number of loose photons
 	for ph in self.non_ovr_photons:
-	    if abs(ph.eta) < 2.5 and ph.pt > 15 and ph.cutBasedBitmap > 0:
+	    #if abs(ph.eta) < 2.5 and ph.pt > 15 and ph.cutBasedBitmap > 0:
+	    if abs(ph.eta) < 2.5 and ph.pt > 15 and ph.cutBased17Bitmap > 0: #for the newfile sample
 		self.nLoosePhotons += 1
 	
 
 	#############
 	#Vetoing events with loose leptons or photons
-	if self.nLoosePhotons != 0: return False
-	self.eventCounts[7] += 1 
-	if self.nLooseElectrons != 0: return False
-	self.eventCounts[8] += 1
 	if self.nLooseMuons != 0: return False
-	self.eventCounts[9] += 1
+	self.eventCounts[3] += 1 
+	if self.nLooseElectrons != 0: return False
+	self.eventCounts[4] += 1
+	if self.nLoosePhotons != 0: return False
+	self.eventCounts[5] += 1
 	if self.nLooseTaus != 0: return False
-	self.eventCounts[10] += 1 
+	self.eventCounts[6] += 1 
 	#############	
+
+	###############
+	self.num_bjets = 0
+	for jet in self.ak4Jets:
+	    if abs(jet.eta) < 2.4 and jet.pt > 20 and jet.btagCSVV2 > 0.8838: #2017 criteria
+		self.num_bjets += 1
+	
+	self.num_bJets.Fill(self.num_bjets)
+
+	#b-jet veto
+	if self.num_bjets != 0: return False
+
+	self.eventCounts[5] += 1
+
+	##############
+
+	if event.MET_pt <= 250: return False #MET larger than 250 GeV 
+
+	self.eventCounts[6] += 1
+
+        if len(jets) != 0:
+	    if not (jets[0].pt > 100 and abs(jets[0].eta) < 2.5): return False #Leading jet requirements
+            self.eventCounts[7] += 1
+	    if not (jets[0].chHEF > 0.1 and jets[0].neHEF < 0.8): return False
+	    self.eventCounts[8] += 1 
+	if abs(event.CaloMET_sumEt - event.MET_sumEt)/event.CaloMET_sumEt >= 0.5: return False #check if the PF MET is correct!	
+	
+	self.eventCounts[9] += 1	
+
 
 
 	#Delta-phi requirement for first four leading AK4 jets
 	self.phiDiff = []
-	if len(self.ak4Jets) <= 4:
+	if 0 < len(self.ak4Jets) <= 4:
 	    for jet in self.ak4Jets:
 		phi_difference = abs(jet.phi - event.MET_phi)
 		if phi_difference <= math.pi:
@@ -191,7 +214,7 @@ class LQAnalysis(Module):
 	    self.jetMETPhi.Fill(min(self.phiDiff))
 	    if min(self.phiDiff) < 0.5: return False
 
-	else:
+	if len(self.ak4Jets) > 4:
 	    for i in range(4):
 		phi_difference = abs(jets[i].phi - event.MET_phi)
 		if phi_difference <= math.pi:
@@ -202,23 +225,10 @@ class LQAnalysis(Module):
 	    self.jetMETPhi.Fill(min(self.phiDiff))
             if min(self.phiDiff) < 0.5: return False
 
-	self.eventCounts[11] += 1
+	self.eventCounts[10] += 1
 	
-	###############
-	self.num_bjets = 0
-	for jet in self.ak4Jets:
-	    if abs(jet.eta) < 2.4 and jet.pt > 20 and jet.btagCSVV2 > 0.8484:
-		self.num_bjets += 1
-	
-	self.num_bJets.Fill(self.num_bjets)
+	###################	
 
-	#b-jet veto
-	if self.num_bjets != 0: return False
-
-	self.eventCounts[12] += 1
-
-	##############
-	
 	x = arange(len(self.eventCounts))
 
 	self.eventCountGraph.SetNameTitle('evtCounts', 'Event Counts After Each Cut, M = ' + self.LQMass + ' #lambda = ' + str(self.LQCoupling))	
@@ -269,6 +279,7 @@ Higgs2017Files = ['/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5
 
 for i in range(len(Higgs2017Files)):
     Higgs2017Files[i] = 'root://cmsxrootd.fnal.gov//' + Higgs2017Files[i]
+
 
 #files=glob.glob("root://cmsxrootd.fnal.gov///store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/*")
 #files=["root://cmsxrootd.fnal.gov///store/mc/RunIISummer16NanoAOD/GluGlu_HToInvisible_M125_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/70FE44FE-C912-E811-9525-0CC47A7C3424.root", "root://cmsxrootd.fnal.gov///store/mc/RunIISummer16NanoAOD/GluGlu_HToInvisible_M125_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/E2817A05-CA12-E811-9FAA-0025905B8612.root"]
