@@ -1,6 +1,21 @@
 import ROOT
 import os
 
+#Defining the plot style
+ROOT.gStyle.SetTitleY(0.99)
+ROOT.gStyle.SetTitleW(0.85)
+ROOT.gStyle.SetTitleH(0.08)
+
+ROOT.gStyle.SetOptStat(0) #no stat box
+
+#x-axis labels
+ROOT.gStyle.SetLabelSize(0.05)
+ROOT.gStyle.SetLabelOffset(1.1)
+
+#y-axis labels
+ROOT.gStyle.SetLabelSize(0.05, "Y")
+ROOT.gStyle.SetLabelOffset(1.35, "Y")
+
 fileDir = 'GENSIM_RootFiles'
 os.chdir(fileDir)
 
@@ -31,7 +46,7 @@ for i, filename in enumerate(os.listdir(fileDir),1):
     MET_hist.Draw("hist")
 
 
-canv.Print('gridPlot_big.png')
+canv.Print('gridPlot_big2.png')
 
 
 
