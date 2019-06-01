@@ -10,7 +10,7 @@ ROOT.gStyle.SetOptStat(0) #no stat box
 
 #x-axis labels
 ROOT.gStyle.SetLabelSize(0.05)
-ROOT.gStyle.SetLabelOffset(1.1)
+ROOT.gStyle.SetLabelOffset(1.15)
 
 #y-axis labels
 ROOT.gStyle.SetLabelSize(0.05, "Y")
@@ -43,10 +43,12 @@ for i, filename in enumerate(os.listdir(fileDir),1):
     inFile = os.path.join(fileDir, filename)
     print('Getting histogram from file %s...' % inFile)
     MET_hist = files[filename].Get("MET")
+    MET_hist.SetFillStyle(1001)
+    MET_hist.SetFillColor(602)
     MET_hist.Draw("hist")
 
 
-canv.Print('gridPlot_big2.png')
+canv.Print('gridPlot_big_colored.png')
 
 
 
