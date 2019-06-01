@@ -1,3 +1,5 @@
+#Script for drawing 4x4 grid plot for leptoquark GEN-SIM files
+
 import ROOT
 import os
 

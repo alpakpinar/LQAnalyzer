@@ -1,6 +1,8 @@
+#Script for normalizing the leptoquark histograms
+
 import ROOT
 
-filename = 'LQ_1_4TeV_1_histOut_all.root'
+filename = 'LQRootFiles/LQ_1_4TeV_1_histOut_all.root'
 infile = ROOT.TFile.Open(filename, 'UPDATE')
 mydir = infile.plots
 
@@ -15,8 +17,13 @@ mydir.cd()
 #MET Histogram
 canv2 = ROOT.TCanvas('canv2', 'canv2')
 METHist = mydir.Get('MET')
-METHist.Scale(norm_weight/52.2727)
-METHist.GetYaxis().SetTitle('Number of Events / 52.2727')
+for i in range(METHist.GetNbinsX()):
+    original_cont = METHist.GetBinContent(i+1)
+    bin_width = METHist.GetBinWidth(i+1)
+    METHist.SetBinContent(i+1, original_cont/bin_width)
+
+METHist.Scale(norm_weight)
+METHist.GetYaxis().SetTitle('Number of Events')
 METHist.Draw("Hist")
 canv2.Print("MET_1_4TeV_1.png")
 METHist.Write()
