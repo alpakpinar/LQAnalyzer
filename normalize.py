@@ -1,4 +1,4 @@
-#Script for normalizing the leptoquark histograms
+#Script for normalizing and plotting the leptoquark histograms
 
 import ROOT
 
@@ -16,65 +16,121 @@ mydir.cd()
 
 #MET Histogram
 canv2 = ROOT.TCanvas('canv2', 'canv2')
-METHist = mydir.Get('MET')
+canv2.SetGrid()
+
+avgBinWidth = 0
+METHist = mydir.Get('MET;1')
+
 for i in range(METHist.GetNbinsX()):
     original_cont = METHist.GetBinContent(i+1)
     bin_width = METHist.GetBinWidth(i+1)
+    avgBinWidth += bin_width
     METHist.SetBinContent(i+1, original_cont/bin_width)
 
+avgBinWidth /= METHist.GetNbinsX()
 METHist.Scale(norm_weight)
-METHist.GetYaxis().SetTitle('Number of Events')
+METHist.GetYaxis().SetTitle('Number of Events / %2.2f' % avgBinWidth)
+
+METHist.SetFillStyle(1001)
+METHist.SetFillColor(ROOT.kRed)
+METHist.SetLineColor(ROOT.kBlack)
+
 METHist.Draw("Hist")
 canv2.Print("MET_1_4TeV_1.png")
 METHist.Write()
 
 #Eta Difference Between Jets
 canv3 = ROOT.TCanvas('canv3', 'canv3')
-EtaHist = mydir.Get('etaDiffGenJets')
+canv3.SetGrid()
+
+EtaHist = mydir.Get('etaDiffGenJets;1')
 bin_widthEta = EtaHist.GetBinWidth(1)
 EtaHist.Scale(norm_weight/bin_widthEta)
+EtaHist.GetYaxis().SetTitle('Number of Events / %2.2f' % bin_widthEta)
+
+EtaHist.SetFillStyle(1001)
+EtaHist.SetFillColor(ROOT.kRed)
+EtaHist.SetLineColor(ROOT.kBlack)
+
 EtaHist.Draw("Hist")
 canv3.Print("etaDiffGenJets_1_4TeV_1.png")
 EtaHist.Write()
 
 #Phi Difference Between Jets
 canv4 = ROOT.TCanvas('canv4','canv4')
-PhiHist = mydir.Get('phiDiffGenJets')
+canv4.SetGrid()
+
+PhiHist = mydir.Get('phiDiffGenJets;1')
 bin_widthPhi = PhiHist.GetBinWidth(1)
 PhiHist.Scale(norm_weight/bin_widthPhi)
+PhiHist.GetYaxis().SetTitle('Number of Events / %2.2f' % bin_widthPhi)
+
+PhiHist.SetFillStyle(1001)
+PhiHist.SetFillColor(ROOT.kRed)
+PhiHist.SetLineColor(ROOT.kBlack)
+
 PhiHist.Draw("Hist")
 canv4.Print("phiDiffGenJets_1_4TeV_1.png")
 PhiHist.Write()
 
 #Jet-MET Phi Difference
 canv5 = ROOT.TCanvas('canv5', 'canv5')
-jetMET_hist = mydir.Get('jetMETPhi')
+canv5.SetGrid()
+
+jetMET_hist = mydir.Get('jetMETPhi;1')
 bin_width_jetMET = jetMET_hist.GetBinWidth(1)
 jetMET_hist.Scale(norm_weight/bin_width_jetMET)
+jetMET_hist.GetYaxis().SetTitle('Number of Events / %2.2f' % bin_width_jetMET)
+
+jetMET_hist.SetFillStyle(1001)
+jetMET_hist.SetFillColor(ROOT.kRed)
+jetMET_hist.SetLineColor(ROOT.kBlack)
+
 jetMET_hist.Draw("Hist")
 canv5.Print("jetMETPhi_1_4TeV_1.png")
 jetMET_hist.Write()
 
 #Number of b-jets
 canv6 = ROOT.TCanvas('canv6', 'canv6')
-numbJets_hist = mydir.Get('numbJets')
+canv6.SetGrid()
+
+numbJets_hist = mydir.Get('numbJets;1')
 numbJets_hist.Scale(norm_weight)
+
+numbJets_hist.SetFillStyle(1001)
+numbJets_hist.SetFillColor(ROOT.kRed)
+numbJets_hist.SetLineColor(ROOT.kBlack)
+
 numbJets_hist.Draw("Hist")
 canv6.Print("numbJets_1_4TeV_1.png")
 numbJets_hist.Write()
 
 #Number of Leptoquarks
 canv7 = ROOT.TCanvas('canv7', 'canv7')
-numLQ_hist = mydir.Get('numLQ')
+canv7.SetGrid()
+
+numLQ_hist = mydir.Get('numLQ;1')
 numLQ_hist.Scale(norm_weight)
+
+numLQ_hist.SetFillStyle(1001)
+numLQ_hist.SetFillColor(ROOT.kRed)
+numLQ_hist.SetLineColor(ROOT.kBlack)
+
 numLQ_hist.Draw("Hist")
 canv7.Print("numLQ_1_4TeV_1.png")
 numLQ_hist.Write()
 
 #Number of u Jets
 canv8 = ROOT.TCanvas('canv8', 'canv8')
-num_uJets_hist = mydir.Get('num_uJets')
+canv8.SetGrid()
+
+num_uJets_hist = mydir.Get('num_uJets;1')
 num_uJets_hist.Scale(norm_weight)
+
+num_uJets_hist.SetFillStyle(1001)
+num_uJets_hist.SetFillColor(ROOT.kRed)
+num_uJets_hist.SetLineColor(ROOT.kBlack)
+
 num_uJets_hist.Draw("Hist")
 canv8.Print("num_uJets_1_4TeV_1.png")
 num_uJets_hist.Write()
