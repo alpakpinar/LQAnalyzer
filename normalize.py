@@ -6,6 +6,9 @@ filename = 'LQRootFiles/LQ_1_4TeV_1_histOut_all.root'
 infile = ROOT.TFile.Open(filename, 'UPDATE')
 mydir = infile.plots
 
+#No stat box
+ROOT.gStyle.SetOptStat(0)
+
 cross_section = 0.01542
 luminosity = 35900
 num_events_gen = 49500
@@ -44,9 +47,9 @@ canv3 = ROOT.TCanvas('canv3', 'canv3')
 canv3.SetGrid()
 
 EtaHist = mydir.Get('etaDiffGenJets;1')
-bin_widthEta = EtaHist.GetBinWidth(1)
-EtaHist.Scale(norm_weight/bin_widthEta)
-EtaHist.GetYaxis().SetTitle('Number of Events / %2.2f' % bin_widthEta)
+#bin_widthEta = EtaHist.GetBinWidth(1)
+EtaHist.Scale(norm_weight)
+EtaHist.GetYaxis().SetTitle('Number of Events')
 
 EtaHist.SetFillStyle(1001)
 EtaHist.SetFillColor(ROOT.kRed)
@@ -61,13 +64,21 @@ canv4 = ROOT.TCanvas('canv4','canv4')
 canv4.SetGrid()
 
 PhiHist = mydir.Get('phiDiffGenJets;1')
-bin_widthPhi = PhiHist.GetBinWidth(1)
-PhiHist.Scale(norm_weight/bin_widthPhi)
-PhiHist.GetYaxis().SetTitle('Number of Events / %2.2f' % bin_widthPhi)
+#bin_widthPhi = PhiHist.GetBinWidth(1)
+PhiHist.Scale(norm_weight)
+PhiHist.GetYaxis().SetTitle('Number of Events')
 
 PhiHist.SetFillStyle(1001)
 PhiHist.SetFillColor(ROOT.kRed)
 PhiHist.SetLineColor(ROOT.kBlack)
+
+#Changing x-axis labels
+axis = PhiHist.GetXaxis()
+axis.SetNdivisions(504, ROOT.kFALSE)
+axis.ChangeLabel(2, -1, -1, -1, -1, -1, "#pi/4")
+axis.ChangeLabel(3, -1, -1, -1, -1, -1, "#pi/2")
+axis.ChangeLabel(4, -1, -1, -1, -1, -1, "3#pi/4")
+axis.ChangeLabel(5, -1, -1, -1, -1, -1, "#pi")
 
 PhiHist.Draw("Hist")
 canv4.Print("phiDiffGenJets_1_4TeV_1.png")
@@ -78,13 +89,21 @@ canv5 = ROOT.TCanvas('canv5', 'canv5')
 canv5.SetGrid()
 
 jetMET_hist = mydir.Get('jetMETPhi;1')
-bin_width_jetMET = jetMET_hist.GetBinWidth(1)
-jetMET_hist.Scale(norm_weight/bin_width_jetMET)
-jetMET_hist.GetYaxis().SetTitle('Number of Events / %2.2f' % bin_width_jetMET)
+#bin_width_jetMET = jetMET_hist.GetBinWidth(1)
+jetMET_hist.Scale(norm_weight)
+jetMET_hist.GetYaxis().SetTitle('Number of Events')
 
 jetMET_hist.SetFillStyle(1001)
 jetMET_hist.SetFillColor(ROOT.kRed)
 jetMET_hist.SetLineColor(ROOT.kBlack)
+
+#Changing x-axis labels
+axis = jetMET_hist.GetXaxis()
+axis.SetNdivisions(504, ROOT.kFALSE)
+axis.ChangeLabel(2, -1, -1, -1, -1, -1, "#pi/4")
+axis.ChangeLabel(3, -1, -1, -1, -1, -1, "#pi/2")
+axis.ChangeLabel(4, -1, -1, -1, -1, -1, "3#pi/4")
+axis.ChangeLabel(5, -1, -1, -1, -1, -1, "#pi")
 
 jetMET_hist.Draw("Hist")
 canv5.Print("jetMETPhi_1_4TeV_1.png")
