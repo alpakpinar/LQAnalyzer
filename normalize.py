@@ -9,6 +9,9 @@ mydir = infile.plots
 #No stat box
 ROOT.gStyle.SetOptStat(0)
 
+#Thicker lines
+ROOT.gStyle.SetHistLineWidth(2)
+
 cross_section = 0.01542
 luminosity = 35900
 num_events_gen = 49500
@@ -32,11 +35,11 @@ for i in range(METHist.GetNbinsX()):
 
 avgBinWidth /= METHist.GetNbinsX()
 METHist.Scale(norm_weight)
-METHist.GetYaxis().SetTitle('Number of Events / %2.2f' % avgBinWidth)
+METHist.GetYaxis().SetTitle('Number of Events / GeV')
 
-METHist.SetFillStyle(1001)
-METHist.SetFillColor(ROOT.kRed)
-METHist.SetLineColor(ROOT.kBlack)
+#METHist.SetFillStyle(1001)
+#METHist.SetFillColor(ROOT.kRed)
+METHist.SetLineColor(ROOT.kBlue)
 
 METHist.Draw("Hist")
 canv2.Print("MET_1_4TeV_1.png")
@@ -51,9 +54,9 @@ EtaHist = mydir.Get('etaDiffGenJets;1')
 EtaHist.Scale(norm_weight)
 EtaHist.GetYaxis().SetTitle('Number of Events')
 
-EtaHist.SetFillStyle(1001)
-EtaHist.SetFillColor(ROOT.kRed)
-EtaHist.SetLineColor(ROOT.kBlack)
+#EtaHist.SetFillStyle(1001)
+#EtaHist.SetFillColor(ROOT.kRed)
+EtaHist.SetLineColor(ROOT.kBlue)
 
 EtaHist.Draw("Hist")
 canv3.Print("etaDiffGenJets_1_4TeV_1.png")
@@ -68,9 +71,9 @@ PhiHist = mydir.Get('phiDiffGenJets;1')
 PhiHist.Scale(norm_weight)
 PhiHist.GetYaxis().SetTitle('Number of Events')
 
-PhiHist.SetFillStyle(1001)
-PhiHist.SetFillColor(ROOT.kRed)
-PhiHist.SetLineColor(ROOT.kBlack)
+#PhiHist.SetFillStyle(1001)
+#PhiHist.SetFillColor(ROOT.kRed)
+PhiHist.SetLineColor(ROOT.kBlue)
 
 #Changing x-axis labels
 axis = PhiHist.GetXaxis()
@@ -93,9 +96,9 @@ jetMET_hist = mydir.Get('jetMETPhi;1')
 jetMET_hist.Scale(norm_weight)
 jetMET_hist.GetYaxis().SetTitle('Number of Events')
 
-jetMET_hist.SetFillStyle(1001)
-jetMET_hist.SetFillColor(ROOT.kRed)
-jetMET_hist.SetLineColor(ROOT.kBlack)
+#jetMET_hist.SetFillStyle(1001)
+#jetMET_hist.SetFillColor(ROOT.kRed)
+jetMET_hist.SetLineColor(ROOT.kBlue)
 
 #Changing x-axis labels
 axis = jetMET_hist.GetXaxis()
@@ -116,9 +119,9 @@ canv6.SetGrid()
 numbJets_hist = mydir.Get('numbJets;1')
 numbJets_hist.Scale(norm_weight)
 
-numbJets_hist.SetFillStyle(1001)
-numbJets_hist.SetFillColor(ROOT.kRed)
-numbJets_hist.SetLineColor(ROOT.kBlack)
+#numbJets_hist.SetFillStyle(1001)
+#numbJets_hist.SetFillColor(ROOT.kRed)
+numbJets_hist.SetLineColor(ROOT.kBlue)
 
 numbJets_hist.Draw("Hist")
 canv6.Print("numbJets_1_4TeV_1.png")
@@ -131,9 +134,11 @@ canv7.SetGrid()
 numLQ_hist = mydir.Get('numLQ;1')
 numLQ_hist.Scale(norm_weight)
 
-numLQ_hist.SetFillStyle(1001)
-numLQ_hist.SetFillColor(ROOT.kRed)
-numLQ_hist.SetLineColor(ROOT.kBlack)
+#numLQ_hist.SetFillStyle(1001)
+#numLQ_hist.SetFillColor(ROOT.kRed)
+numLQ_hist.SetLineColor(ROOT.kBlue)
+
+numLQ_hist.GetXaxis().SetNdivisions(505, ROOT.kFALSE)
 
 numLQ_hist.Draw("Hist")
 canv7.Print("numLQ_1_4TeV_1.png")
@@ -146,13 +151,26 @@ canv8.SetGrid()
 num_uJets_hist = mydir.Get('num_uJets;1')
 num_uJets_hist.Scale(norm_weight)
 
-num_uJets_hist.SetFillStyle(1001)
-num_uJets_hist.SetFillColor(ROOT.kRed)
-num_uJets_hist.SetLineColor(ROOT.kBlack)
+#num_uJets_hist.SetFillStyle(1001)
+#num_uJets_hist.SetFillColor(ROOT.kRed)
+num_uJets_hist.SetLineColor(ROOT.kBlue)
 
 num_uJets_hist.Draw("Hist")
 canv8.Print("num_uJets_1_4TeV_1.png")
 num_uJets_hist.Write()
+
+#Leading Jet Pt
+canv9 = ROOT.TCanvas('canv9', 'canv9')
+canv9.SetGrid()
+
+leadingJetPt_hist = mydir.Get('leadingJetPt;1')
+leadingJetPt_hist.Scale(norm_weight)
+
+leadingJetPt_hist.SetLineColor(ROOT.kBlue)
+
+leadingJetPt_hist.Draw("Hist")
+canv9.Print("leadingJetPt_1_4TeV_1.png")
+leadingJetPt_hist.Write()
 
 
 
