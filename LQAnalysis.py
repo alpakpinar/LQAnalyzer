@@ -75,7 +75,7 @@ class LQAnalysis(Module):
 	self.eventCountGraph=ROOT.TGraph(13)
 	self.addObject(self.eventCountGraph)
 
-	self.eventCounts = zeros(11)
+	self.eventCounts = zeros(13)
 
     def deltaR(self,prt1,prt2):
 	eta1, eta2 = prt1.eta, prt2.eta
@@ -121,7 +121,7 @@ class LQAnalysis(Module):
 
 	############
 	
-	self.METBefore.Fill(event.MET_pt)	
+	#self.METBefore.Fill(event.MET_pt)	
 	
 	#AK4 jet requirements
 	self.ak4Jets = [jet for jet in jets if (abs(jet.eta) < 2.5 and jet.pt > 30)]
@@ -138,14 +138,14 @@ class LQAnalysis(Module):
 	        self.nLooseElectrons += 1
 
 	#Calculate the number of loose muons
-	for mu in self.non_ovr_muons:
-	    if ((mu.isGlobal == 1) or (mu.isTracker == 1)) and (mu.isPFcand == 1) and (mu.pfRelIso04_all < 0.25):		
-	    	self.nLooseMuons += 1
+	#for mu in self.non_ovr_muons:
+	#    if ((mu.isGlobal == 1) or (mu.isTracker == 1)) and (mu.isPFcand == 1) and (mu.pfRelIso04_all < 0.25):		
+	#    	self.nLooseMuons += 1
 	
 	#For Higgs 2017 sample
-	#for mu in self.non_ovr_muons:
-	#    if (mu.softId == 1) and (mu.isPFcand == 1) and (mu.pfRelIso04_all < 0.25): 
-        # 	self.nLooseMuons += 1
+	for mu in self.non_ovr_muons:
+	    if (mu.softId == 1) and (mu.isPFcand == 1) and (mu.pfRelIso04_all < 0.25): 
+                self.nLooseMuons += 1
 
 	#Calculate the number of loose taus
 	for tau in self.non_ovr_taus:
@@ -154,8 +154,8 @@ class LQAnalysis(Module):
 
 	#Calculate the number of loose photons
 	for ph in self.non_ovr_photons:
-	    #if abs(ph.eta) < 2.5 and ph.pt > 15 and ph.cutBasedBitmap > 0:
-	    if abs(ph.eta) < 2.5 and ph.pt > 15 and ph.cutBased17Bitmap > 0: #for the newfile sample
+	    if abs(ph.eta) < 2.5 and ph.pt > 15 and ph.cutBasedBitmap > 0:
+	    #if abs(ph.eta) < 2.5 and ph.pt > 15 and ph.cutBased17Bitmap > 0: #for the newfile sample
 		self.nLoosePhotons += 1
 	
 
@@ -171,34 +171,19 @@ class LQAnalysis(Module):
 	self.eventCounts[6] += 1 
 	#############	
 
-	###############
-	self.num_bjets = 0
-	for jet in self.ak4Jets:
-	    if abs(jet.eta) < 2.4 and jet.pt > 20 and jet.btagCSVV2 > 0.8838: #2017 criteria
-		self.num_bjets += 1
-	
-	self.num_bJets.Fill(self.num_bjets)
-
-	#b-jet veto
-	if self.num_bjets != 0: return False
-
-	self.eventCounts[5] += 1
-
-	##############
 
 	if event.MET_pt <= 250: return False #MET larger than 250 GeV 
 
-	self.eventCounts[6] += 1
+	self.eventCounts[7] += 1
 
         if len(jets) != 0:
 	    if not (jets[0].pt > 100 and abs(jets[0].eta) < 2.5): return False #Leading jet requirements
-            self.eventCounts[7] += 1
+            self.eventCounts[8] += 1
 	    if not (jets[0].chHEF > 0.1 and jets[0].neHEF < 0.8): return False
-	    self.eventCounts[8] += 1 
-	if abs(event.CaloMET_sumEt - event.MET_sumEt)/event.CaloMET_sumEt >= 0.5: return False #check if the PF MET is correct!	
+	    self.eventCounts[9] += 1 
+	if abs(event.CaloMET_sumEt - event.MET_sumEt)/event.CaloMET_sumEt >= 0.5: return False 
 	
-	self.eventCounts[9] += 1	
-
+	self.eventCounts[10] += 1	
 
 
 	#Delta-phi requirement for first four leading AK4 jets
@@ -212,6 +197,7 @@ class LQAnalysis(Module):
 		    self.phiDiff.append(2*math.pi - phi_difference)
 	    
 	    self.jetMETPhi.Fill(min(self.phiDiff))
+
 	    if min(self.phiDiff) < 0.5: return False
 
 	if len(self.ak4Jets) > 4:
@@ -223,11 +209,27 @@ class LQAnalysis(Module):
 		    self.phiDiff.append(2*math.pi - phi_difference)
 	    
 	    self.jetMETPhi.Fill(min(self.phiDiff))
+
             if min(self.phiDiff) < 0.5: return False
 
-	self.eventCounts[10] += 1
+	self.eventCounts[11] += 1
 	
-	###################	
+	###############
+	self.num_bjets = 0
+	for jet in self.ak4Jets:
+	    #if abs(jet.eta) < 2.4 and jet.pt > 20 and jet.btagCSVV2 > 0.8838: #2017 criteria
+	    if abs(jet.eta) < 2.4 and jet.pt > 20 and jet.btagCSVV2 > 0.8484: #2017 criteria
+	    
+                self.num_bjets += 1
+	
+	self.num_bJets.Fill(self.num_bjets)
+
+	#b-jet veto
+	if self.num_bjets != 0: return False
+
+	self.eventCounts[12] += 1
+
+	##############	
 
 	x = arange(len(self.eventCounts))
 
@@ -287,8 +289,15 @@ trial_file=["/eos/uscms/store/user/aakpinar/SLQ_MCProduction/SLQ_1TeV_0_1/SLQ_Na
 
 #1TeV_0_1_Files=glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/SLQ_1TeV_0_1/SLQ_NanoAOD_new/190425_205837/0000/SLQ_1TeV_0_1_RunIIFall17NanoAOD-00027_trial_*")
 
-files=glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/SLQ_1_4TeV_1/SLQ_1_4TeV_1_NanoAOD_new/190523_034946/0000/SLQ_1_4TeV_1_RunIIFall17NanoAOD-00027_*")
+files_1_4TeV_1 = glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_1_4TeV_1/SLQ_1_4TeV_1_NanoAOD_new/190523_034946/0000/SLQ_1_4TeV_1_RunIIFall17NanoAOD-00027_*")
 
-p=PostProcessor(".",files,branchsel=None,modules=[LQAnalysis()],noOut=True,histFileName="LQ_1_4TeV_1_histOut_all.root",histDirName="plots")
+files_0_5TeV_1 = glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_0_5TeV_1/SLQ_0_5TeV_1_NanoAOD/190530_032721/0000/SLQ_0_5TeV_1_RunIIFall17NanoAOD-00027_*")
+files_1TeV_1 = glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_1TeV_1/SLQ_1TeV_1_NanoAOD/190530_165503/0000/SLQ_1TeV_1_RunIIFall17NanoAOD-00027_*")
+files_1_4TeV_0_5 = glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_1_4TeV_0_5/SLQ_1_4TeV_0_5_NanoAOD/190530_123516/0000/SLQ_1_4TeV_0_5_RunIIFall17NanoAOD-00027_*")
+files_1_4TeV_0_7 = glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_1_4TeV_0_7/SLQ_1_4TeV_0_7_NanoAOD/190530_123612/0000/SLQ_1_4TeV_0_7_RunIIFall17NanoAOD-00027_*")
+files_1_4TeV_1_5 = glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_1_4TeV_1_5/SLQ_1_4TeV_1_5_NanoAOD/190530_165211/0000/SLQ_1_4TeV_1_5_RunIIFall17NanoAOD-00027_*")
+files_2TeV_1 = glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_2TeV_1/SLQ_2TeV_1_NanoAOD/190530_123735/0000/SLQ_2TeV_1_RunIIFall17NanoAOD-00027_*")
+
+p=PostProcessor(".",files_1_4TeV_1,branchsel=None,modules=[LQAnalysis()],noOut=True,histFileName="LQRootFiles/LQ_1_4TeV_1_histOut_all.root",histDirName="plots")
 p.run()
 		    
