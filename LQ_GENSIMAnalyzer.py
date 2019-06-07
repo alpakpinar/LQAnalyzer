@@ -1,7 +1,3 @@
-#####################
-#DON'T USE THIS ONE YET, UNDER DEVELOPMENT
-#####################
-
 import ROOT
 import os
 import argparse
