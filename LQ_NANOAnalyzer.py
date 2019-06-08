@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+#####################
+#Script for analyzing LQ NanoAOD samples
+#####################
 import os, sys
 import ROOT
 import glob
@@ -40,9 +44,6 @@ class LQAnalysis(Module):
 	    self.LQCoupling = args.coupling
 
 	print('LQ Mass: %s, LQ Coupling: %s' % (self.LQMass, self.LQCoupling))	
-
-	#self.LQMass = '1.4 TeV'
-	#self.LQCoupling = 1.0
 
 	self.leadingJetPt=ROOT.TH1F('leadingJetPt', 'Leading Jet Pt, M = ' + self.LQMass + ' #lambda = ' + str(self.LQCoupling) , 50, 0, 1500) 
 	self.addObject(self.leadingJetPt)
@@ -304,12 +305,7 @@ Higgs2017Files = ['/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5
 for i in range(len(Higgs2017Files)):
     Higgs2017Files[i] = 'root://cmsxrootd.fnal.gov//' + Higgs2017Files[i]
 
-
-#files=glob.glob("root://cmsxrootd.fnal.gov///store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/*")
-#files=["root://cmsxrootd.fnal.gov///store/mc/RunIISummer16NanoAOD/GluGlu_HToInvisible_M125_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/70FE44FE-C912-E811-9525-0CC47A7C3424.root", "root://cmsxrootd.fnal.gov///store/mc/RunIISummer16NanoAOD/GluGlu_HToInvisible_M125_13TeV_powheg_pythia8/NANOAODSIM/PUMoriond17_05Feb2018_94X_mcRun2_asymptotic_v2-v1/40000/E2817A05-CA12-E811-9FAA-0025905B8612.root"]
 trial_file=["/eos/uscms/store/user/aakpinar/SLQ_MCProduction/SLQ_1TeV_0_1/SLQ_NanoAOD_new/190425_205837/0000/SLQ_1TeV_0_1_RunIIFall17NanoAOD-00027_trial_1.root"]
-
-#1TeV_0_1_Files=glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/SLQ_1TeV_0_1/SLQ_NanoAOD_new/190425_205837/0000/SLQ_1TeV_0_1_RunIIFall17NanoAOD-00027_trial_*")
 
 LQParams = args.mass + 'TeV_' + args.coupling
 
@@ -322,14 +318,6 @@ print('Analyzing the files in %s' % inputDir)
 
 files = glob.glob(inputDir + '/*')
 
-
-#files_1_4TeV_1 = glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_1_4TeV_1/SLQ_1_4TeV_1_NanoAOD_new/190523_034946/0000/SLQ_1_4TeV_1_RunIIFall17NanoAOD-00027_*")
-#files_0_5TeV_1 = glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_0_5TeV_1/SLQ_0_5TeV_1_NanoAOD/190530_032721/0000/SLQ_0_5TeV_1_RunIIFall17NanoAOD-00027_*")
-#files_1TeV_1 = glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_1TeV_1/SLQ_1TeV_1_NanoAOD/190530_165503/0000/SLQ_1TeV_1_RunIIFall17NanoAOD-00027_*")
-#files_1_4TeV_0_5 = glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_1_4TeV_0_5/SLQ_1_4TeV_0_5_NanoAOD/190530_123516/0000/SLQ_1_4TeV_0_5_RunIIFall17NanoAOD-00027_*")
-#files_1_4TeV_0_7 = glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_1_4TeV_0_7/SLQ_1_4TeV_0_7_NanoAOD/190530_123612/0000/SLQ_1_4TeV_0_7_RunIIFall17NanoAOD-00027_*")
-#files_1_4TeV_1_5 = glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_1_4TeV_1_5/SLQ_1_4TeV_1_5_NanoAOD/190530_165211/0000/SLQ_1_4TeV_1_5_RunIIFall17NanoAOD-00027_*")
-#files_2TeV_1 = glob.glob("/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_2TeV_1/SLQ_2TeV_1_NanoAOD/190530_123735/0000/SLQ_2TeV_1_RunIIFall17NanoAOD-00027_*")
 hist_name = 'LQRootFiles/LQ_' + LQParams + '_histOut_all.root'
 
 p=PostProcessor(".",files,branchsel=None,modules=[LQAnalysis()],noOut=True,histFileName=hist_name,histDirName="plots")
