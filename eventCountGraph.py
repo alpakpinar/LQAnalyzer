@@ -1,44 +1,50 @@
-#Script for drawing the event yield graph for LQ samples
+#Module for drawing the event yield graph for LQ samples
 
 import ROOT
 from numpy import arange
 
-filename = 'LQRootFiles/LQ_1_4TeV_1_histOut_all.root'
-infile = ROOT.TFile.Open(filename, 'UPDATE')
-mydir = infile.plots
-mydir.cd()
+def drawEventGraph(filename, LQParams, saveToROOT = True):
 
-evtCountsGraph = mydir.Get('evtCounts;1')
-cut_names = ['No Cut', 'HLT', 'Filters', 'Loose Mu', 'Loose El', 'Loose Ph', 'Loose Tau', 'MET', 'LJ_pT,eta', 'LJ_CHF,NHF', 'CaloMET-PFMET', 'Jet-MET Phi', 'b-jet'] 
-x = arange(evtCountsGraph.GetN())
+    print('Starting to draw the event yield graph...')
 
-num_events = evtCountsGraph.GetY()[0]
-#print(evtCountsGraph.GetN())
+    infile = ROOT.TFile.Open(filename, 'UPDATE')
+    mydir = infile.plots
+    mydir.cd()
 
-for i in range(evtCountsGraph.GetN()):
-    evtCountsGraph.SetPoint(i, x[i], evtCountsGraph.GetY()[i]*100/num_events)      
+    print('Inside the file %s' % filename)
 
-x_ax = evtCountsGraph.GetXaxis()
-x_ax.Set(13,0,13)
+    evtCountsGraph = mydir.Get('evtCounts;1')
+    cut_names = ['No Cut', 'HLT', 'Filters', 'Loose Mu', 'Loose El', 'Loose Ph', 'Loose Tau', 'MET', 'LJ_pT,eta', 'LJ_CHF,NHF', 'CaloMET-PFMET', 'Jet-MET Phi', 'b-jet'] 
+    x = arange(evtCountsGraph.GetN())
 
-for i in range(len(cut_names)):
-    x_ax.SetBinLabel(i+1, cut_names[i])
+    num_events = evtCountsGraph.GetY()[0]
 
-#x_ax.CenterLabels()
-x_ax.LabelsOption("v")
-x_ax.SetTitle('Cuts')
-x_ax.SetTitleOffset(1.4)
-x_ax.SetLabelSize(0.03)
+    for i in range(evtCountsGraph.GetN()):
+        evtCountsGraph.SetPoint(i, x[i], evtCountsGraph.GetY()[i]*100/num_events)      
 
-evtCountsGraph.GetYaxis().SetTitle('% Events Passing')
+    x_ax = evtCountsGraph.GetXaxis()
+    x_ax.Set(13,0,13) 
+    for i in range(len(cut_names)): 
+	x_ax.SetBinLabel(i+1, cut_names[i]) 
+ 
+    x_ax.LabelsOption("v")
+    x_ax.SetTitle('Cuts')
+    x_ax.SetTitleOffset(1.4)
+    x_ax.SetLabelSize(0.03)
 
-evtCountsGraph.SetMarkerStyle(20)
+    evtCountsGraph.GetYaxis().SetTitle('% Events Passing')
 
-canv1 = ROOT.TCanvas("canv1","canv1", 800, 600)
-canv1.SetGrid()
-canv1.SetBottomMargin(0.20)
+    evtCountsGraph.SetMarkerStyle(20)
 
-evtCountsGraph.Draw("AP")
-canv1.Print("evtCounts_LQ_1_4TeV_1.png")
-#evtCountsGraph.Write()
+    canv1 = ROOT.TCanvas("canv1","canv1", 800, 600)
+    canv1.SetGrid()
+    canv1.SetBottomMargin(0.20)
 
+    evtCountsGraph.Draw("AP")
+    canv1.Print("evtCounts_LQ_" + LQParams + ".png")
+   
+    if saveToROOT:
+	evtCountsGraph.Write()
+
+
+    
