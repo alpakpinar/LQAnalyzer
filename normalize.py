@@ -2,7 +2,7 @@
 
 import ROOT
 
-def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True) 
+def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True): 
     
     #No stat box
     ROOT.gStyle.SetOptStat(0)
@@ -24,12 +24,12 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True)
     cross_section = crossSections[LQParams]
     num_events = num_events_gen[LQParams]
     luminosity = 35900
-    norm_weight = cross_section*luminosity/num_events_gen
+    norm_weight = cross_section*luminosity/num_events
 
     print('Cross section: %f, Number of events generated: %d' % (cross_section, num_events))
 
-	infile = ROOT.TFile.Open(filename, 'UPDATE')
-	mydir = infile.plots
+    infile = ROOT.TFile.Open(filename, 'UPDATE')
+    mydir = infile.plots
     mydir.cd()
 
     print('Inside the file %s' % filename)
@@ -130,6 +130,8 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True)
 
     else:    
         numbJets_hist.SetLineColor(ROOT.kBlue)
+
+    numbJets_hist.GetXaxis().SetNdivisions(505, ROOT.kFALSE)
 
     numbJets_hist.Draw("Hist")
     canv4.Print("numbJets_" + LQParams + ".png")
