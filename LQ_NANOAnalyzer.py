@@ -10,6 +10,9 @@ import math
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 from importlib import import_module
 import argparse
+
+#Helper modules
+import normalize
 import eventCountGraph
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
@@ -335,4 +338,5 @@ p.run()
 #Normalizing and drawing histograms
 
 eventCountGraph.drawEventGraph(filename, LQParams)
-		    
+
+normalize.drawHist(filename, LQParams) 	    
