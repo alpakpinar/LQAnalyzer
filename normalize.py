@@ -1,176 +1,188 @@
-#Script for normalizing and plotting the leptoquark histograms
+#Module for normalizing and plotting the leptoquark histograms
 
 import ROOT
 
-filename = 'LQRootFiles/LQ_1_4TeV_1_histOut_all.root'
-infile = ROOT.TFile.Open(filename, 'UPDATE')
-mydir = infile.plots
+def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True) 
+    
+    #No stat box
+    ROOT.gStyle.SetOptStat(0)
 
-#No stat box
-ROOT.gStyle.SetOptStat(0)
+    #Thicker lines
+    ROOT.gStyle.SetHistLineWidth(2)
+  
+    labels = ['1_4TeV_0_5', '1_4TeV_0_7', '1_4TeV_1', '1_4TeV_1_5', '0_5TeV_1', '1TeV_1', '2TeV_1']
+    xsections = [0.003762, 0.007397, 0.01542, 0.04106, 2.294, 0.09211, 0.001973]
+    numEvents = [50000, 50000, 49500, 50000, 49750, 50000, 49750]    
 
-#Thicker lines
-ROOT.gStyle.SetHistLineWidth(2)
+    crossSections = {}
+    num_events_gen = {}    
 
-cross_section = 0.01542
-luminosity = 35900
-num_events_gen = 49500
+    for i, label in enumerate(labels):
+        crossSections[label] = xsections[i]
+        num_events_gen[label] = numEvents[i]
 
-norm_weight = cross_section*luminosity/num_events_gen
+    cross_section = crossSections[LQParams]
+    num_events = num_events_gen[LQParams]
+    luminosity = 35900
+    norm_weight = cross_section*luminosity/num_events_gen
 
-mydir.cd()
+    print('Cross section: %f, Number of events generated: %d' % (cross_section, num_events))
 
-#MET Histogram
-canv2 = ROOT.TCanvas('canv2', 'canv2')
-canv2.SetGrid()
+	infile = ROOT.TFile.Open(filename, 'UPDATE')
+	mydir = infile.plots
+    mydir.cd()
 
-avgBinWidth = 0
-METHist = mydir.Get('MET;1')
+    print('Inside the file %s' % filename)
+    print('Working on MET histogram...')
 
-for i in range(METHist.GetNbinsX()):
-    original_cont = METHist.GetBinContent(i+1)
-    bin_width = METHist.GetBinWidth(i+1)
-    avgBinWidth += bin_width
-    METHist.SetBinContent(i+1, original_cont/bin_width)
+    canv = ROOT.TCanvas('canv', 'canv')
 
-avgBinWidth /= METHist.GetNbinsX()
-METHist.Scale(norm_weight)
-METHist.GetYaxis().SetTitle('Number of Events / GeV')
+    avgBinWidth = 0
+    METHist = mydir.Get('MET;1')
 
-#METHist.SetFillStyle(1001)
-#METHist.SetFillColor(ROOT.kRed)
-METHist.SetLineColor(ROOT.kBlue)
+    for i in range(METHist.GetNbinsX()):
+        original_cont = METHist.GetBinContent(i+1)
+        bin_width = METHist.GetBinWidth(i+1)
+        avgBinWidth += bin_width
+        METHist.SetBinContent(i+1, original_cont/bin_width)
 
-METHist.Draw("Hist")
-canv2.Print("MET_1_4TeV_1.png")
-METHist.Write()
+    avgBinWidth /= METHist.GetNbinsX()
+    METHist.Scale(norm_weight)
+    METHist.GetYaxis().SetTitle('Number of Events / GeV')
 
-#Eta Difference Between Jets
-canv3 = ROOT.TCanvas('canv3', 'canv3')
-canv3.SetGrid()
+    if fillHist:
+        METHist.SetFillStyle(1001)
+        METHist.SetFillColor(ROOT.kRed)
+        METHist.SetLineColor(ROOT.kBlack)
+    
+    else:
+        METHist.SetLineColor(ROOT.kBlue)
 
-EtaHist = mydir.Get('etaDiffGenJets;1')
-#bin_widthEta = EtaHist.GetBinWidth(1)
-EtaHist.Scale(norm_weight)
-EtaHist.GetYaxis().SetTitle('Number of Events')
+    METHist.Draw("Hist")
+    canv.Print("MET_" + LQParams + ".png")
 
-#EtaHist.SetFillStyle(1001)
-#EtaHist.SetFillColor(ROOT.kRed)
-EtaHist.SetLineColor(ROOT.kBlue)
+    if saveHistToROOT:
+        METHist.Write()
 
-EtaHist.Draw("Hist")
-canv3.Print("etaDiffGenJets_1_4TeV_1.png")
-EtaHist.Write()
+    print('Working on eta histogram...')
 
-#Phi Difference Between Jets
-canv4 = ROOT.TCanvas('canv4','canv4')
-canv4.SetGrid()
+    canv2 = ROOT.TCanvas('canv2', 'canv2')
 
-PhiHist = mydir.Get('phiDiffGenJets;1')
-#bin_widthPhi = PhiHist.GetBinWidth(1)
-PhiHist.Scale(norm_weight)
-PhiHist.GetYaxis().SetTitle('Number of Events')
+    EtaHist = mydir.Get('etaDiffGenJets;1')
+    EtaHist.Scale(norm_weight)
+    EtaHist.GetYaxis().SetTitle('Number of Events')
 
-#PhiHist.SetFillStyle(1001)
-#PhiHist.SetFillColor(ROOT.kRed)
-PhiHist.SetLineColor(ROOT.kBlue)
+    if fillHist:
+        EtaHist.SetFillStyle(1001)
+        EtaHist.SetFillColor(ROOT.kRed)
+        EtaHist.SetLineColor(ROOT.kBlack)    
 
-#Changing x-axis labels
-axis = PhiHist.GetXaxis()
-axis.SetNdivisions(504, ROOT.kFALSE)
-axis.ChangeLabel(2, -1, -1, -1, -1, -1, "#pi/4")
-axis.ChangeLabel(3, -1, -1, -1, -1, -1, "#pi/2")
-axis.ChangeLabel(4, -1, -1, -1, -1, -1, "3#pi/4")
-axis.ChangeLabel(5, -1, -1, -1, -1, -1, "#pi")
+    else:
+        EtaHist.SetLineColor(ROOT.kBlue)
 
-PhiHist.Draw("Hist")
-canv4.Print("phiDiffGenJets_1_4TeV_1.png")
-PhiHist.Write()
+    EtaHist.Draw("Hist")
+    canv2.Print("etaDiffGenJets_" +LQParams + ".png")
+    
+    if saveHistToROOT:
+        EtaHist.Write()
 
-#Jet-MET Phi Difference
-canv5 = ROOT.TCanvas('canv5', 'canv5')
-canv5.SetGrid()
+    print('Working on jet-MET phi histogram...')
 
-jetMET_hist = mydir.Get('jetMETPhi;1')
-#bin_width_jetMET = jetMET_hist.GetBinWidth(1)
-jetMET_hist.Scale(norm_weight)
-jetMET_hist.GetYaxis().SetTitle('Number of Events')
+    canv3 = ROOT.TCanvas('canv3', 'canv3')
 
-#jetMET_hist.SetFillStyle(1001)
-#jetMET_hist.SetFillColor(ROOT.kRed)
-jetMET_hist.SetLineColor(ROOT.kBlue)
+    jetMET_hist = mydir.Get('jetMETPhi;1')
+    jetMET_hist.Scale(norm_weight)
+    jetMET_hist.GetYaxis().SetTitle('Number of Events')
 
-#Changing x-axis labels
-axis = jetMET_hist.GetXaxis()
-axis.SetNdivisions(504, ROOT.kFALSE)
-axis.ChangeLabel(2, -1, -1, -1, -1, -1, "#pi/4")
-axis.ChangeLabel(3, -1, -1, -1, -1, -1, "#pi/2")
-axis.ChangeLabel(4, -1, -1, -1, -1, -1, "3#pi/4")
-axis.ChangeLabel(5, -1, -1, -1, -1, -1, "#pi")
+    if fillHist:
+        jetMET_hist.SetFillStyle(1001)
+        jetMET_hist.SetFillColor(ROOT.kRed)
+        jetMET_hist.SetLineColor(ROOT.kBlack)    
 
-jetMET_hist.Draw("Hist")
-canv5.Print("jetMETPhi_1_4TeV_1.png")
-jetMET_hist.Write()
+    else:
+        jetMET_hist.SetLineColor(ROOT.kBlue)
 
-#Number of b-jets
-canv6 = ROOT.TCanvas('canv6', 'canv6')
-canv6.SetGrid()
+    #Changing x-axis labels
+    axis = jetMET_hist.GetXaxis()
+    axis.SetNdivisions(504, ROOT.kFALSE)
+    axis.ChangeLabel(2, -1, -1, -1, -1, -1, "#pi/4")
+    axis.ChangeLabel(3, -1, -1, -1, -1, -1, "#pi/2")
+    axis.ChangeLabel(4, -1, -1, -1, -1, -1, "3#pi/4")
+    axis.ChangeLabel(5, -1, -1, -1, -1, -1, "#pi")
 
-numbJets_hist = mydir.Get('numbJets;1')
-numbJets_hist.Scale(norm_weight)
+    jetMET_hist.Draw("Hist")
+    canv3.Print("jetMETPhi_" + LQParams + ".png")
+    
+    if saveHistToROOT:
+        jetMET_hist.Write()
 
-#numbJets_hist.SetFillStyle(1001)
-#numbJets_hist.SetFillColor(ROOT.kRed)
-numbJets_hist.SetLineColor(ROOT.kBlue)
+    print('Working on num-bJets histogram...')
 
-numbJets_hist.Draw("Hist")
-canv6.Print("numbJets_1_4TeV_1.png")
-numbJets_hist.Write()
+    canv4 = ROOT.TCanvas('canv4', 'canv4')
 
-#Number of Leptoquarks
-canv7 = ROOT.TCanvas('canv7', 'canv7')
-canv7.SetGrid()
+    numbJets_hist = mydir.Get('numbJets;1')
+    numbJets_hist.Scale(norm_weight)
 
-numLQ_hist = mydir.Get('numLQ;1')
-numLQ_hist.Scale(norm_weight)
+    if fillHist:
+        numbJets_hist.SetFillStyle(1001)
+        numbJets_hist.SetFillColor(ROOT.kRed)
+        numbJets_hist.SetLineColor(ROOT.kBlack)
 
-#numLQ_hist.SetFillStyle(1001)
-#numLQ_hist.SetFillColor(ROOT.kRed)
-numLQ_hist.SetLineColor(ROOT.kBlue)
+    else:    
+        numbJets_hist.SetLineColor(ROOT.kBlue)
 
-numLQ_hist.GetXaxis().SetNdivisions(505, ROOT.kFALSE)
+    numbJets_hist.Draw("Hist")
+    canv4.Print("numbJets_" + LQParams + ".png")
+    
+    if saveHistToROOT:
+        numbJets_hist.Write()
 
-numLQ_hist.Draw("Hist")
-canv7.Print("numLQ_1_4TeV_1.png")
-numLQ_hist.Write()
+    print('Working on numLQ histogram...')
 
-#Number of u Jets
-canv8 = ROOT.TCanvas('canv8', 'canv8')
-canv8.SetGrid()
+    canv5 = ROOT.TCanvas('canv5', 'canv5')
 
-num_uJets_hist = mydir.Get('num_uJets;1')
-num_uJets_hist.Scale(norm_weight)
+    numLQ_hist = mydir.Get('numLQ;1')
+    numLQ_hist.Scale(norm_weight)
 
-#num_uJets_hist.SetFillStyle(1001)
-#num_uJets_hist.SetFillColor(ROOT.kRed)
-num_uJets_hist.SetLineColor(ROOT.kBlue)
+    if fillHist:
+        numLQ_hist.SetFillStyle(1001)
+        numLQ_hist.SetFillColor(ROOT.kRed)
+        numLQ_hist.SetLineColor(ROOT.kBlack)
+    
+    else:
+        numLQ_hist.SetLineColor(ROOT.kBlue)
 
-num_uJets_hist.Draw("Hist")
-canv8.Print("num_uJets_1_4TeV_1.png")
-num_uJets_hist.Write()
+    numLQ_hist.GetXaxis().SetNdivisions(505, ROOT.kFALSE)
 
-#Leading Jet Pt
-canv9 = ROOT.TCanvas('canv9', 'canv9')
-canv9.SetGrid()
+    numLQ_hist.Draw("Hist")
+    canv5.Print("numLQ_1_4TeV_1.png")
+    
+    if saveHistToROOT:
+        numLQ_hist.Write()
 
-leadingJetPt_hist = mydir.Get('leadingJetPt;1')
-leadingJetPt_hist.Scale(norm_weight)
+    print('Working on leading jet Pt histogram...')
 
-leadingJetPt_hist.SetLineColor(ROOT.kBlue)
+    canv6 = ROOT.TCanvas('canv6', 'canv6')
 
-leadingJetPt_hist.Draw("Hist")
-canv9.Print("leadingJetPt_1_4TeV_1.png")
-leadingJetPt_hist.Write()
+    leadingJetPt_hist = mydir.Get('leadingJetPt;1')
+    leadingJetPt_hist.Scale(norm_weight)
+
+    if fillHist:
+        leadingJetPt_hist.SetFillStyle(1001)
+        leadingJetPt_hist.SetFillColor(ROOT.kRed)
+        leadingJetPt_hist.SetLineColor(ROOT.kBlack)
+
+    else:    
+        leadingJetPt_hist.SetLineColor(ROOT.kBlue)
+
+    leadingJetPt_hist.Draw("Hist")
+    canv6.Print("leadingJetPt_1_4TeV_1.png")
+   
+    if saveHistToROOT:
+         leadingJetPt_hist.Write()
+
+    print('*****Job finished*****')
+
 
 
 
