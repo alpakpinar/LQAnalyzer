@@ -10,6 +10,7 @@ import math
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 from importlib import import_module
 import argparse
+import eventCountGraph
 
 from PhysicsTools.NanoAODTools.postprocessing.framework.postprocessor import PostProcessor
 
@@ -20,6 +21,7 @@ from numpy import arange, zeros, array
 parser = argparse.ArgumentParser()
 parser.add_argument('-m', '--mass', help = 'Mass of the LQ sample in TeV (Enter with an underscore)')
 parser.add_argument('-c', '--coupling', help = 'Coupling of the LQ sample (Enter with an underscore)')
+parser.add_argument('--trial', help = 'Runs only over the trial file', action = 'store_true')
 
 args = parser.parse_args()
 
@@ -305,7 +307,7 @@ Higgs2017Files = ['/store/mc/RunIIFall17NanoAOD/GluGlu_HToInvisible_M125_TuneCP5
 for i in range(len(Higgs2017Files)):
     Higgs2017Files[i] = 'root://cmsxrootd.fnal.gov//' + Higgs2017Files[i]
 
-trial_file=["/eos/uscms/store/user/aakpinar/SLQ_MCProduction/SLQ_1TeV_0_1/SLQ_NanoAOD_new/190425_205837/0000/SLQ_1TeV_0_1_RunIIFall17NanoAOD-00027_trial_1.root"]
+trial_file=['/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_1_4TeV_1/SLQ_1_4TeV_1_NanoAOD/190523_034946/0000/SLQ_1_4TeV_1_RunIIFall17NanoAOD-00027_1.root']
 
 LQParams = args.mass + 'TeV_' + args.coupling
 
@@ -318,8 +320,19 @@ print('Analyzing the files in %s' % inputDir)
 
 files = glob.glob(inputDir + '/*')
 
-hist_name = 'LQRootFiles/LQ_' + LQParams + '_histOut_all.root'
+filename = 'LQRootFiles/LQ_' + LQParams + '_histOut_all.root'
 
-p=PostProcessor(".",files,branchsel=None,modules=[LQAnalysis()],noOut=True,histFileName=hist_name,histDirName="plots")
+if args.trial:
+    files = trial_file
+    print('Only running over the trial file!')
+    filename = 'LQ_1TeV_0_1_trial.root'
+
+p=PostProcessor(".",files,branchsel=None,modules=[LQAnalysis()],noOut=True,histFileName=filename,histDirName="plots")
 p.run()
+
+####################
+
+#Normalizing and drawing histograms
+
+eventCountGraph.drawEventGraph(filename, LQParams)
 		    
