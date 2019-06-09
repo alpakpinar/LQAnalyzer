@@ -131,7 +131,7 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True):
     else:    
         numbJets_hist.SetLineColor(ROOT.kBlue)
 
-    numbJets_hist.GetXaxis().SetNdivisions(505, ROOT.kFALSE)
+    numbJets_hist.GetXaxis().SetNdivisions(504, ROOT.kFALSE)
 
     numbJets_hist.Draw("Hist")
     canv4.Print("numbJets_" + LQParams + ".png")
