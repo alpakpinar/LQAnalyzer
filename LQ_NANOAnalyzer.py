@@ -34,59 +34,62 @@ class LQAnalysis(Module):
 
     def beginJob(self,histFile=None,histDirName=None):
         Module.beginJob(self,histFile,histDirName)
+
+	global LQMass
+	global LQCoupling
 	
 	if '_' in args.mass:
 	    index = args.mass.find('_')
-	    self.LQMass = args.mass[:index] + '.' + args.mass[index+1:] + ' TeV'
+	    LQMass = args.mass[:index] + '.' + args.mass[index+1:] + ' TeV'
 
 	else:
-	    self.LQMass = args.mass + ' TeV'
+	    LQMass = args.mass + ' TeV'
 
 	if '_' in args.coupling:
 	    index = args.coupling.find('_')
-	    self.LQCoupling = args.coupling[:index] + '.' + args.coupling[index+1:]
+	    LQCoupling = args.coupling[:index] + '.' + args.coupling[index+1:]
 	else:
-	    self.LQCoupling = args.coupling
+	    LQCoupling = args.coupling
 
-	print('LQ Mass: %s, LQ Coupling: %s' % (self.LQMass, self.LQCoupling))	
+	print('LQ Mass: %s, LQ Coupling: %s' % (LQMass, LQCoupling))	
 
-	self.leadingJetPt=ROOT.TH1F('leadingJetPt', 'Leading Jet Pt, M = ' + self.LQMass + ' #lambda = ' + str(self.LQCoupling) , 50, 0, 1500) 
+	self.leadingJetPt=ROOT.TH1F('leadingJetPt', 'Leading Jet Pt, M = ' + LQMass + ' #lambda = ' + str(LQCoupling) , 50, 0, 1500) 
 	self.addObject(self.leadingJetPt)
 	self.leadingJetPt.GetXaxis().SetTitle('Leading Jet Pt (GeV)')
 	self.leadingJetPt.GetYaxis().SetTitle('Number of Events')
 
-	self.num_bJets=ROOT.TH1F('numbJets', 'Number of b-jets, M = ' + self.LQMass + ' #lambda = ' + str(self.LQCoupling), 4, 0, 4)
+	self.num_bJets=ROOT.TH1F('numbJets', 'Number of b-jets, M = ' + LQMass + ' #lambda = ' + str(LQCoupling), 4, 0, 4)
 	self.addObject(self.num_bJets)
 	self.num_bJets.GetXaxis().SetTitle('Number of b-jets')
 	self.num_bJets.GetYaxis().SetTitle('Number of Events')	
 
 	self.edges = [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0, 1400.0]
-	self.MET=ROOT.TH1F('MET', 'Missing Transverse Energy, M = ' + self.LQMass + ' #lambda = ' + str(self.LQCoupling), 22, array(self.edges))
+	self.MET=ROOT.TH1F('MET', 'Missing Transverse Energy, M = ' + LQMass + ' #lambda = ' + str(LQCoupling), 22, array(self.edges))
 	self.addObject(self.MET) 
 	self.MET.GetXaxis().SetTitle('MET (GeV)')
 	self.MET.GetYaxis().SetTitle('Number of Events')
 
-	self.phiDiffGenJets=ROOT.TH1F('phiDiffGenJets', '#Delta #phi Between Two GenJets Coming From u Quark, M = ' + self.LQMass + ' #lambda = ' + str(self.LQCoupling), 15, 0, math.pi)
+	self.phiDiffGenJets=ROOT.TH1F('phiDiffGenJets', '#Delta #phi Between Two GenJets Coming From u Quark, M = ' + LQMass + ' #lambda = ' + str(LQCoupling), 15, 0, math.pi)
 	self.addObject(self.phiDiffGenJets)
 	self.phiDiffGenJets.GetXaxis().SetTitle('#Delta #phi')
 	self.phiDiffGenJets.GetYaxis().SetTitle('Number of Events')
 
-	self.etaDiffGenJets=ROOT.TH1F('etaDiffGenJets', '#Delta #eta Between Two GenJets Coming From u Quark, M = ' + self.LQMass + ' #lambda = ' + str(self.LQCoupling), 30, -3, 3)
+	self.etaDiffGenJets=ROOT.TH1F('etaDiffGenJets', '#Delta #eta Between Two GenJets Coming From u Quark, M = ' + LQMass + ' #lambda = ' + str(LQCoupling), 30, -3, 3)
 	self.addObject(self.etaDiffGenJets)
 	self.etaDiffGenJets.GetXaxis().SetTitle('#Delta #eta')
 	self.etaDiffGenJets.GetYaxis().SetTitle('Number of Events')
 
-	self.num_uJets=ROOT.TH1F('num_uJets', 'Number of GenJets Coming From u Quark, M = ' + self.LQMass + ' #lambda = ' + str(self.LQCoupling), 5, 0, 5)
+	self.num_uJets=ROOT.TH1F('num_uJets', 'Number of GenJets Coming From u Quark, M = ' + LQMass + ' #lambda = ' + str(LQCoupling), 5, 0, 5)
 	self.addObject(self.num_uJets)
 	self.num_uJets.GetXaxis().SetTitle('Number of u Jets')
 	self.num_uJets.GetYaxis().SetTitle('Number of Events')
 	
-	self.numLQ=ROOT.TH1F('numLQ', 'Number of Leptoquarks, M = ' + self.LQMass + ' #lambda = ' + str(self.LQCoupling), 5, 0, 5)
+	self.numLQ=ROOT.TH1F('numLQ', 'Number of Leptoquarks, M = ' + LQMass + ' #lambda = ' + str(LQCoupling), 5, 0, 5)
 	self.addObject(self.numLQ)
 	self.numLQ.GetXaxis().SetTitle('Number of Leptoquarks')
 	self.numLQ.GetYaxis().SetTitle('Number of Events')
 
-	self.deltaR_prtJet=ROOT.TH1F('deltaR_prtJet', 'deltaR Between GenParticle and GenJet, M = ' + self.LQMass + ' #lambda = ' + str(self.LQCoupling), 20, 0, 5)
+	self.deltaR_prtJet=ROOT.TH1F('deltaR_prtJet', 'deltaR Between GenParticle and GenJet, M = ' + LQMass + ' #lambda = ' + str(LQCoupling), 20, 0, 5)
 	self.addObject(self.deltaR_prtJet)
 
 	self.jetMETPhi=ROOT.TH1F('jetMETPhi', 'Minimum #Delta #phi Between 4 Leading Jets and MET', 15, 0, math.pi)
@@ -103,7 +106,8 @@ class LQAnalysis(Module):
 	self.eventCountGraph=ROOT.TGraph(13)
 	self.addObject(self.eventCountGraph)	
 
-	self.eventCounts = zeros(13)
+	global eventCounts
+	eventCounts = zeros(13)
 
     def deltaR(self,prt1,prt2):
 	eta1, eta2 = prt1.eta, prt2.eta
@@ -127,14 +131,14 @@ class LQAnalysis(Module):
 	genJets = Collection(event, 'GenJet')
 	eventSum = ROOT.TLorentzVector()
 
-	self.eventCounts[0] += 1
+	eventCounts[0] += 1
 
 	#ET_miss Triggers
 	trigger_pass = (event.HLT_PFMETNoMu120_PFMHTNoMu120_IDTight == 1) or (event.HLT_PFMETNoMu130_PFMHTNoMu130_IDTight == 1) or (event.HLT_PFMETNoMu140_PFMHTNoMu140_IDTight == 1)
 
 	if not trigger_pass: return False
 
-	self.eventCounts[1] += 1
+	eventCounts[1] += 1
 	
 	#############
 
@@ -145,7 +149,7 @@ class LQAnalysis(Module):
 	if event.Flag_HBHENoiseIsoFilter != 1: return False
 	if event.Flag_EcalDeadCellTriggerPrimitiveFilter != 1: return False
 	if event.Flag_BadPFMuonFilter != 1: return False
-	self.eventCounts[2] += 1
+	eventCounts[2] += 1
 
 	############
 	
@@ -190,28 +194,28 @@ class LQAnalysis(Module):
 	#############
 	#Vetoing events with loose leptons or photons
 	if self.nLooseMuons != 0: return False
-	self.eventCounts[3] += 1 
+	eventCounts[3] += 1 
 	if self.nLooseElectrons != 0: return False
-	self.eventCounts[4] += 1
+	eventCounts[4] += 1
 	if self.nLoosePhotons != 0: return False
-	self.eventCounts[5] += 1
+	eventCounts[5] += 1
 	if self.nLooseTaus != 0: return False
-	self.eventCounts[6] += 1 
+	eventCounts[6] += 1 
 	#############	
 
 
 	if event.MET_pt <= 250: return False #MET larger than 250 GeV 
 
-	self.eventCounts[7] += 1
+	eventCounts[7] += 1
 
         if len(jets) != 0:
 	    if not (jets[0].pt > 100 and abs(jets[0].eta) < 2.5): return False #Leading jet requirements
-            self.eventCounts[8] += 1
+            eventCounts[8] += 1
 	    if not (jets[0].chHEF > 0.1 and jets[0].neHEF < 0.8): return False
-	    self.eventCounts[9] += 1 
+	    eventCounts[9] += 1 
 	if abs(event.CaloMET_sumEt - event.MET_sumEt)/event.CaloMET_sumEt >= 0.5: return False 
 	
-	self.eventCounts[10] += 1	
+	eventCounts[10] += 1	
 
 
 	#Delta-phi requirement for first four leading AK4 jets
@@ -240,7 +244,7 @@ class LQAnalysis(Module):
 
             if min(self.phiDiff) < 0.5: return False
 
-	self.eventCounts[11] += 1
+	eventCounts[11] += 1
 	
 	###############
 	self.num_bjets = 0
@@ -255,16 +259,16 @@ class LQAnalysis(Module):
 	#b-jet veto
 	if self.num_bjets != 0: return False
 
-	self.eventCounts[12] += 1
+	eventCounts[12] += 1
 
 	##############	
 
-	x = arange(len(self.eventCounts))
+	x = arange(len(eventCounts))
 
-	self.eventCountGraph.SetNameTitle('evtCounts', 'Event Counts After Each Cut, M = ' + self.LQMass + ' #lambda = ' + str(self.LQCoupling))	
+	self.eventCountGraph.SetNameTitle('evtCounts', 'Event Counts After Each Cut, M = ' + LQMass + ' #lambda = ' + str(LQCoupling))	
 
-	for i in range(len(self.eventCounts)):
-	    self.eventCountGraph.SetPoint(i, x[i], self.eventCounts[i])     
+	for i in range(len(eventCounts)):
+	    self.eventCountGraph.SetPoint(i, x[i], eventCounts[i])     
 
 	self.leadingJetPt.Fill(jets[0].pt)	
      	 	
@@ -312,23 +316,31 @@ for i in range(len(Higgs2017Files)):
 
 trial_file=['/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_1_4TeV_1/SLQ_1_4TeV_1_NanoAOD/190523_034946/0000/SLQ_1_4TeV_1_RunIIFall17NanoAOD-00027_1.root']
 
-LQParams = args.mass + 'TeV_' + args.coupling
-
-prod_dir = '/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_' + LQParams
-sample_dir = 'SLQ_' + LQParams + '_NanoAOD'
-inputDir = os.path.join(prod_dir, sample_dir)
-inputDir += '/' + os.listdir(inputDir)[0] + '/0000'
-
-print('Analyzing the files in %s' % inputDir)
-
-files = glob.glob(inputDir + '/*')
-
-filename = 'LQRootFiles/LQ_' + LQParams + '_histOut_all.root'
-
 if args.trial:
+    
     files = trial_file
     print('Only running over the trial file!')
-    filename = 'LQ_1TeV_0_1_trial.root'
+    filename = 'LQ_1_4TeV_1_trial.root'
+    LQParams = '1_4TeV_1'	
+
+else:
+
+    LQParams = args.mass + 'TeV_' + args.coupling
+
+    prod_dir = '/eos/uscms/store/user/aakpinar/SLQ_MCProduction/shape_study/SLQ_' + LQParams
+    sample_dir = 'SLQ_' + LQParams + '_NanoAOD'
+    inputDir = os.path.join(prod_dir, sample_dir)
+    inputDir += '/' + os.listdir(inputDir)[0] + '/0000'
+
+    numFiles = len([name for name in os.listdir(inputDir) if os.path.isfile(os.path.join(inputDir,name))])
+
+    print('Analyzing the files in %s' % inputDir)
+    print('Number of files to be analyzed: %d' % numFiles)
+
+    files = glob.glob(inputDir + '/*')
+
+    filename = 'LQRootFiles/LQ_' + LQParams + '_histOut_all.root'
+
 
 p=PostProcessor(".",files,branchsel=None,modules=[LQAnalysis()],noOut=True,histFileName=filename,histDirName="plots")
 p.run()
@@ -339,4 +351,15 @@ p.run()
 
 eventCountGraph.drawEventGraph(filename, LQParams)
 
-normalize.drawHist(filename, LQParams) 	    
+normalize.drawHist(filename, LQParams) 
+
+#Get the final ratio of events selected for this run
+
+print('#######Event Yield Results#######')
+print('LQ Mass: %s, LQ Coupling: %s' % (LQMass, LQCoupling))
+print('Total number of events: %d' % eventCounts[0])
+print('Total number of events selected: %d' % eventCounts[-1])
+print('Percentage of events selected: %2.2f' % float(eventCounts[-1]*100/eventCounts[0]) + '%')
+print('#################################')
+
+	    
