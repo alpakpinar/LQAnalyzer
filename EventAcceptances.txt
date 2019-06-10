@@ -1,0 +1,11 @@
+#####Event Acceptances#####
+LQ Parameters     Total Number of Events    Accepted Number of Events    Passing Ratio (%)
+
+0_5TeV_1        49750      14809      29.77     
+1TeV_1          50000      27690      55.38     
+1_4TeV_1        49500      29704      60.01     
+2TeV_1          49750      29560      59.42     
+1_4TeV_0_5      50000      30799      61.60     
+1_4TeV_0_7      50000      30659      61.32     
+1_4TeV_1_5      50000      28282      56.56     
+
