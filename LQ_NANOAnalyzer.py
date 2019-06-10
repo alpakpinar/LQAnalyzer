@@ -349,9 +349,9 @@ p.run()
 
 #Normalizing and drawing histograms
 
-eventCountGraph.drawEventGraph(filename, LQParams)
+#eventCountGraph.drawEventGraph(filename, LQParams)
 
-normalize.drawHist(filename, LQParams) 
+#normalize.drawHist(filename, LQParams) 
 
 #Get the final ratio of events selected for this run
 
@@ -359,7 +359,24 @@ print('#######Event Yield Results#######')
 print('LQ Mass: %s, LQ Coupling: %s' % (LQMass, LQCoupling))
 print('Total number of events: %d' % eventCounts[0])
 print('Total number of events selected: %d' % eventCounts[-1])
-print('Percentage of events selected: %2.2f' % float(eventCounts[-1]*100/eventCounts[0]) + '%')
+
+passRatio = float(eventCounts[-1]*100/eventCounts[0]) 
+print('Percentage of events selected: %2.2f' % passRatio + '%')
+
+#Write the event yields to a text file
+txtfileName = 'EventAcceptances.txt'
+
+txtFile = open(txtfileName, 'a+')
+if '#####Event Acceptances#####' not in txtFile.read():
+
+    txtFile.write('#####Event Acceptances#####')
+    txtFile.write('LQ Parameters     Total Number of Events    Accepted Number of Events    Passing Ratio (%)')
+
+txtFile.write('{0:<15s} {1:<10d} {2:<10d} {3:<10.2f}'.format(LQParams, int(eventCounts[0]), int(eventCounts[-1]), passRatio) + '\n') 
+#txtFile.write(LQParams + '{:<8d}'.format(int(eventCounts[0])) + '{:<8d}'.format(int(eventCounts[-1])) + '{:<82.2f}'.format(passRatio) + '\n') 
+ 
+print('Wrote the event yield result to ' + txtfileName)
 print('#################################')
+
 
 	    
