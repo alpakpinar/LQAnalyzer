@@ -69,16 +69,6 @@ class LQAnalysis(Module):
 	self.MET.GetXaxis().SetTitle('MET (GeV)')
 	self.MET.GetYaxis().SetTitle('Number of Events')
 
-	self.phiDiffGenJets=ROOT.TH1F('phiDiffGenJets', '#Delta #phi Between Two GenJets Coming From u Quark, M = ' + LQMass + ' #lambda = ' + str(LQCoupling), 15, 0, math.pi)
-	self.addObject(self.phiDiffGenJets)
-	self.phiDiffGenJets.GetXaxis().SetTitle('#Delta #phi')
-	self.phiDiffGenJets.GetYaxis().SetTitle('Number of Events')
-
-	self.etaDiffGenJets=ROOT.TH1F('etaDiffGenJets', '#Delta #eta Between Two GenJets Coming From u Quark, M = ' + LQMass + ' #lambda = ' + str(LQCoupling), 30, -3, 3)
-	self.addObject(self.etaDiffGenJets)
-	self.etaDiffGenJets.GetXaxis().SetTitle('#Delta #eta')
-	self.etaDiffGenJets.GetYaxis().SetTitle('Number of Events')
-
 	self.num_uJets=ROOT.TH1F('num_uJets', 'Number of GenJets Coming From u Quark, M = ' + LQMass + ' #lambda = ' + str(LQCoupling), 5, 0, 5)
 	self.addObject(self.num_uJets)
 	self.num_uJets.GetXaxis().SetTitle('Number of u Jets')
@@ -293,15 +283,15 @@ class LQAnalysis(Module):
 	
 	self.num_uJets.Fill(len(self.genJetsFromU))	
 
-	if len(self.genJetsFromU) == 2: #Filling the histograms for pair production modes
-	    self.phiDiff_genJets = abs(self.genJetsFromU[1].phi - self.genJetsFromU[0].phi)
-	    if self.phiDiff_genJets <= math.pi:
-	        self.phiDiffGenJets.Fill(self.phiDiff_genJets)
-	    else:
-		self.phiDiffGenJets.Fill(2*math.pi - self.phiDiff_genJets)
+	#if len(self.genJetsFromU) == 2: #Filling the histograms for pair production modes
+	#    self.phiDiff_genJets = abs(self.genJetsFromU[1].phi - self.genJetsFromU[0].phi)
+	#    if self.phiDiff_genJets <= math.pi:
+	#        self.phiDiffGenJets.Fill(self.phiDiff_genJets)
+	#    else:
+	#	self.phiDiffGenJets.Fill(2*math.pi - self.phiDiff_genJets)
 
-	    self.etaDiff_genJets = self.genJetsFromU[1].eta - self.genJetsFromU[0].eta
-	    self.etaDiffGenJets.Fill(self.etaDiff_genJets)
+	#    self.etaDiff_genJets = self.genJetsFromU[1].eta - self.genJetsFromU[0].eta
+	#    self.etaDiffGenJets.Fill(self.etaDiff_genJets)
 		
 	return True
 
@@ -349,9 +339,9 @@ p.run()
 
 #Normalizing and drawing histograms
 
-#eventCountGraph.drawEventGraph(filename, LQParams)
+eventCountGraph.drawEventGraph(filename, LQParams)
 
-#normalize.drawHist(filename, LQParams) 
+normalize.drawHist(filename, LQParams) 
 
 #Get the final ratio of events selected for this run
 
@@ -373,7 +363,6 @@ if '#####Event Acceptances#####' not in txtFile.read():
     txtFile.write('LQ Parameters     Total Number of Events    Accepted Number of Events    Passing Ratio (%)')
 
 txtFile.write('{0:<15s} {1:<10d} {2:<10d} {3:<10.2f}'.format(LQParams, int(eventCounts[0]), int(eventCounts[-1]), passRatio) + '\n') 
-#txtFile.write(LQParams + '{:<8d}'.format(int(eventCounts[0])) + '{:<8d}'.format(int(eventCounts[-1])) + '{:<82.2f}'.format(passRatio) + '\n') 
  
 print('Wrote the event yield result to ' + txtfileName)
 print('#################################')
