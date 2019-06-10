@@ -2,10 +2,17 @@
 
 import ROOT
 from numpy import arange
+import os
 
 def drawEventGraph(filename, LQParams, saveToROOT = True):
 
-    print('Starting to draw the event yield graph...')
+    pngDir = 'savedPlots/normalizedPlots/' + LQParams
+
+    if not os.path.exists(pngDir):
+
+	os.mkdir(pngDir)
+
+    print('Working on the event yield graph...')
 
     infile = ROOT.TFile.Open(filename, 'UPDATE')
     mydir = infile.plots
@@ -41,7 +48,7 @@ def drawEventGraph(filename, LQParams, saveToROOT = True):
     canv1.SetBottomMargin(0.20)
 
     evtCountsGraph.Draw("AP")
-    canv1.Print("evtCounts_LQ_" + LQParams + ".png")
+    canv1.Print(os.path.join(pngDir, "evtCounts_LQ_" + LQParams + ".png"))
    
     if saveToROOT:
 	evtCountsGraph.Write()

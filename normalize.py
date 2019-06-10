@@ -1,6 +1,7 @@
 #Module for normalizing and plotting the leptoquark histograms
 
 import ROOT
+import os
 
 def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True): 
     
@@ -9,7 +10,14 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True):
 
     #Thicker lines
     ROOT.gStyle.SetHistLineWidth(2)
-  
+
+    #Creating PNG directory if not created before
+    pngDir = 'savedPlots/normalizedPlots/' + LQParams
+	
+    if not os.path.exists(pngDir):
+
+        os.mkdir(pngDir) 
+ 
     labels = ['1_4TeV_0_5', '1_4TeV_0_7', '1_4TeV_1', '1_4TeV_1_5', '0_5TeV_1', '1TeV_1', '2TeV_1']
     xsections = [0.003762, 0.007397, 0.01542, 0.04106, 2.294, 0.09211, 0.001973]
     numEvents = [50000, 50000, 49500, 50000, 49750, 50000, 49750]    
@@ -59,7 +67,7 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True):
         METHist.SetLineColor(ROOT.kBlue)
 
     METHist.Draw("Hist")
-    canv.Print("MET_" + LQParams + ".png")
+    canv.Print(os.path.join(pngDir, "MET_" + LQParams + ".png"))
 
     if saveHistToROOT:
         METHist.Write()
@@ -89,7 +97,7 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True):
     axis.ChangeLabel(5, -1, -1, -1, -1, -1, "#pi")
 
     jetMET_hist.Draw("Hist")
-    canv2.Print("jetMETPhi_" + LQParams + ".png")
+    canv2.Print(os.path.join(pngDir, "jetMETPhi_" + LQParams + ".png"))
     
     if saveHistToROOT:
         jetMET_hist.Write()
@@ -112,7 +120,7 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True):
     numbJets_hist.GetXaxis().SetNdivisions(504, ROOT.kFALSE)
 
     numbJets_hist.Draw("Hist")
-    canv3.Print("numbJets_" + LQParams + ".png")
+    canv3.Print(os.path.join(pngDir, "numbJets_" + LQParams + ".png"))
     
     if saveHistToROOT:
         numbJets_hist.Write()
@@ -135,7 +143,7 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True):
     numLQ_hist.GetXaxis().SetNdivisions(505, ROOT.kFALSE)
 
     numLQ_hist.Draw("Hist")
-    canv4.Print("numLQ_1_4TeV_1.png")
+    canv4.Print(os.path.join(pngDir, "numLQ_" + LQParams + ".png"))
     
     if saveHistToROOT:
         numLQ_hist.Write()
@@ -156,7 +164,7 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True):
         leadingJetPt_hist.SetLineColor(ROOT.kBlue)
 
     leadingJetPt_hist.Draw("Hist")
-    canv5.Print("leadingJetPt_1_4TeV_1.png")
+    canv5.Print(os.path.join(pngDir, "leadingJetPt_" + LQParams + ".png"))
    
     if saveHistToROOT:
          leadingJetPt_hist.Write()
