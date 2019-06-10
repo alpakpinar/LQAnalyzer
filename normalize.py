@@ -64,31 +64,9 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True):
     if saveHistToROOT:
         METHist.Write()
 
-    print('Working on eta histogram...')
-
-    canv2 = ROOT.TCanvas('canv2', 'canv2')
-
-    EtaHist = mydir.Get('etaDiffGenJets;1')
-    EtaHist.Scale(norm_weight)
-    EtaHist.GetYaxis().SetTitle('Number of Events')
-
-    if fillHist:
-        EtaHist.SetFillStyle(1001)
-        EtaHist.SetFillColor(ROOT.kRed)
-        EtaHist.SetLineColor(ROOT.kBlack)    
-
-    else:
-        EtaHist.SetLineColor(ROOT.kBlue)
-
-    EtaHist.Draw("Hist")
-    canv2.Print("etaDiffGenJets_" +LQParams + ".png")
-    
-    if saveHistToROOT:
-        EtaHist.Write()
-
     print('Working on jet-MET phi histogram...')
 
-    canv3 = ROOT.TCanvas('canv3', 'canv3')
+    canv2 = ROOT.TCanvas('canv2', 'canv2')
 
     jetMET_hist = mydir.Get('jetMETPhi;1')
     jetMET_hist.Scale(norm_weight)
@@ -111,14 +89,14 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True):
     axis.ChangeLabel(5, -1, -1, -1, -1, -1, "#pi")
 
     jetMET_hist.Draw("Hist")
-    canv3.Print("jetMETPhi_" + LQParams + ".png")
+    canv2.Print("jetMETPhi_" + LQParams + ".png")
     
     if saveHistToROOT:
         jetMET_hist.Write()
 
     print('Working on num-bJets histogram...')
 
-    canv4 = ROOT.TCanvas('canv4', 'canv4')
+    canv3 = ROOT.TCanvas('canv3', 'canv3')
 
     numbJets_hist = mydir.Get('numbJets;1')
     numbJets_hist.Scale(norm_weight)
@@ -134,14 +112,14 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True):
     numbJets_hist.GetXaxis().SetNdivisions(504, ROOT.kFALSE)
 
     numbJets_hist.Draw("Hist")
-    canv4.Print("numbJets_" + LQParams + ".png")
+    canv3.Print("numbJets_" + LQParams + ".png")
     
     if saveHistToROOT:
         numbJets_hist.Write()
 
     print('Working on numLQ histogram...')
 
-    canv5 = ROOT.TCanvas('canv5', 'canv5')
+    canv4 = ROOT.TCanvas('canv4', 'canv4')
 
     numLQ_hist = mydir.Get('numLQ;1')
     numLQ_hist.Scale(norm_weight)
@@ -157,14 +135,14 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True):
     numLQ_hist.GetXaxis().SetNdivisions(505, ROOT.kFALSE)
 
     numLQ_hist.Draw("Hist")
-    canv5.Print("numLQ_1_4TeV_1.png")
+    canv4.Print("numLQ_1_4TeV_1.png")
     
     if saveHistToROOT:
         numLQ_hist.Write()
 
     print('Working on leading jet Pt histogram...')
 
-    canv6 = ROOT.TCanvas('canv6', 'canv6')
+    canv5 = ROOT.TCanvas('canv5', 'canv5')
 
     leadingJetPt_hist = mydir.Get('leadingJetPt;1')
     leadingJetPt_hist.Scale(norm_weight)
@@ -178,7 +156,7 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True):
         leadingJetPt_hist.SetLineColor(ROOT.kBlue)
 
     leadingJetPt_hist.Draw("Hist")
-    canv6.Print("leadingJetPt_1_4TeV_1.png")
+    canv5.Print("leadingJetPt_1_4TeV_1.png")
    
     if saveHistToROOT:
          leadingJetPt_hist.Write()
