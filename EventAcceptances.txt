@@ -8,4 +8,4 @@ LQ Parameters     Total Number of Events    Accepted Number of Events    Passing
 1_4TeV_0_5      50000      30799      61.60     
 1_4TeV_0_7      50000      30659      61.32     
 1_4TeV_1_5      50000      28282      56.56     
-
+0_5TeV_0_5      50000      15567      31.13     
