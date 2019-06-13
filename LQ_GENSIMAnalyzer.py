@@ -1,6 +1,7 @@
 import ROOT
 import os
 import argparse
+from numpy import array
 
 #FWLite python libraries
 from DataFormats.FWLite import Handle, Events
@@ -17,6 +18,7 @@ parser.add_argument('-m', '--mass', help = 'Mass of the LQ sample in TeV (Enter 
 parser.add_argument('-c', '--coupling', help = 'Coupling of the LQ sample (Enter with an underscore)')
 parser.add_argument('-s', '--short', help = 'Run over first 25 files', action = 'store_true')
 parser.add_argument('--genCut', help = 'Run over files with genCut MET > 50 GeV', action = 'store_true')
+parser.add_argument('--LQhist', help = 'Draw the numLQ comparison histograms for three cases', action = 'store_true')
 
 args = parser.parse_args()
 
@@ -40,6 +42,9 @@ else:
     LQCoupling = args.coupling
 
 print('LQ Mass: %s, LQ Coupling: %s' % (LQMass, LQCoupling))
+print('MET > 50 GeV cut: %s' % args.genCut)
+print('Drawing numLQ histograms: %s' % args.LQhist)
+print('Running in short mode: %s' % args.short)
 
 ##########################
 #Choosing the cross-section
@@ -77,10 +82,24 @@ else:
 MET_bounds = [150, 250, 350]
 
 #Defining output file
-fout = ROOT.TFile('GENSIM_MET_' + LQParams +  'numLQcomparisonPlot_50METCut.root', "RECREATE")
+if args.LQhist and args.genCut:
+    fout = ROOT.TFile('GENSIM_MET_' + LQParams +  'numLQcomparisonPlot_50METCut.root', "RECREATE")
+
+elif args.LQhist and not args.genCut:
+    fout = ROOT.TFile('GENSIM_MET_' + LQParams +  'numLQcomparisonPlot_noMETCut.root', "RECREATE")
+
+elif not args.LQhist and args.genCut:
+    fout = ROOT.TFile('GENSIM_MET_' + LQParams +  '_50METCut.root', "RECREATE")
+
+elif not args.LQhist and not args.genCut:
+    fout = ROOT.TFile('GENSIM_MET_' + LQParams +  '_noMETCut.root', "RECREATE")
 
 #Prepare the MET histogram
-MET_hist=ROOT.TH1F('MET', 'Missing Transverse Energy, M = ' + LQMass + ' #lambda = ' + LQCoupling, 27, 50, 1400)
+
+edges = [250.0, 280.0, 310.0, 340.0, 370.0, 400.0, 430.0, 470.0, 510.0, 550.0, 590.0, 640.0, 690.0, 740.0, 790.0, 840.0, 900.0, 960.0, 1020.0, 1090.0, 1160.0, 1250.0, 1400.0] 
+MET_hist=ROOT.TH1F('MET', 'Missing Transverse Energy, M = ' + LQMass + ' #lambda = ' + str(LQCoupling), 22, array(edges))
+
+#MET_hist=ROOT.TH1F('MET', 'Missing Transverse Energy, M = ' + LQMass + ' #lambda = ' + LQCoupling, 20, 0, 100)
 MET_hist.GetXaxis().SetTitle('MET (GeV)')
 MET_hist.GetYaxis().SetTitle('Number of Events')
 
@@ -114,7 +133,8 @@ print('Starting analyzing files in %s' % inputDir)
 
 for inputFile in os.listdir(inputDir):
     
-    if file_count == 25: break #For quick tests
+    if args.short:
+        if file_count == 25: break #For quick tests
 
     if 'inLHE' not in inputFile:
 	inFile = os.path.join(inputDir,inputFile)
@@ -134,35 +154,37 @@ for inputFile in os.listdir(inputDir):
 
 	    numLQ = [0, 0, 0]
 
-	    if mets.product()[0].pt() < MET_bounds[0]:
+	    if args.LQhist:
 
-	        for particle in genParticles.product():
-		 	    
-		    if abs(particle.pdgId()) == 1104 and particle.status() == 22:
+		if mets.product()[0].pt() < MET_bounds[0]:
 
-	    	        numLQ[0] += 1	
+		    for particle in genParticles.product():
+				
+			if abs(particle.pdgId()) == 1104 and particle.status() == 22:
 
-	    numLQ_hist1.Fill(numLQ[0])
+			    numLQ[0] += 1	
 
-	    if mets.product()[0].pt() < MET_bounds[1]:
+		numLQ_hist1.Fill(numLQ[0])
 
-	        for particle in genParticles.product():
-		 	    
-		    if abs(particle.pdgId()) == 1104 and particle.status() == 22:
+		if mets.product()[0].pt() < MET_bounds[1]:
 
-	    	        numLQ[1] += 1	
+		    for particle in genParticles.product():
+				
+			if abs(particle.pdgId()) == 1104 and particle.status() == 22:
 
-	    numLQ_hist2.Fill(numLQ[1])
+			    numLQ[1] += 1	
 
-	    if mets.product()[0].pt() < MET_bounds[2]:
+		numLQ_hist2.Fill(numLQ[1])
 
-	        for particle in genParticles.product():
-		 	    
-		    if abs(particle.pdgId()) == 1104 and particle.status() == 22:
+		if mets.product()[0].pt() < MET_bounds[2]:
 
-	    	        numLQ[2] += 1	
+		    for particle in genParticles.product():
+				
+			if abs(particle.pdgId()) == 1104 and particle.status() == 22:
 
-	    numLQ_hist3.Fill(numLQ[2])
+			    numLQ[2] += 1	
+
+		numLQ_hist3.Fill(numLQ[2])
 
 #####################
 
@@ -174,41 +196,53 @@ normWeight = cross_section*luminosity/num_events
 
 MET_hist.Scale(normWeight)
 
-print('Normalizing numLQ histograms...')
+if args.LQhist:
 
-numLQ_hist1.Scale(normWeight)
-numLQ_hist1.SetNdivisions(505)
-numLQ_hist1.SetLineColor(ROOT.kBlue)
+    print('Normalizing numLQ histograms...')
 
-numLQ_hist2.Scale(normWeight)
-numLQ_hist2.SetNdivisions(505)
-numLQ_hist2.SetLineColor(ROOT.kBlack)
+    numLQ_hist1.Scale(normWeight)
+    numLQ_hist1.SetNdivisions(505)
+    numLQ_hist1.SetLineColor(ROOT.kBlue)
 
-numLQ_hist3.Scale(normWeight)
-numLQ_hist3.SetNdivisions(505)
-numLQ_hist3.SetLineColor(ROOT.kRed)
+    numLQ_hist2.Scale(normWeight)
+    numLQ_hist2.SetNdivisions(505)
+    numLQ_hist2.SetLineColor(ROOT.kBlack)
 
-#Creating a legend
-print('Writing the legend...')
+    numLQ_hist3.Scale(normWeight)
+    numLQ_hist3.SetNdivisions(505)
+    numLQ_hist3.SetLineColor(ROOT.kRed)
 
-legend = ROOT.TLegend(0.55, 0.55, 0.8, 0.8)
-legend.SetBorderSize(0)
-legend.AddEntry(numLQ_hist1, 'MET < ' + str(MET_bounds[0]) + ' GeV', 'L')
-legend.AddEntry(numLQ_hist2, 'MET < ' + str(MET_bounds[1]) + ' GeV', 'L')
-legend.AddEntry(numLQ_hist3, 'MET < ' + str(MET_bounds[2]) + ' GeV', 'L')
+    #Creating a legend
+    print('Writing the legend...')
+
+    legend = ROOT.TLegend(0.55, 0.55, 0.8, 0.8)
+    legend.SetBorderSize(0)
+    legend.AddEntry(numLQ_hist1, 'MET < ' + str(MET_bounds[0]) + ' GeV', 'L')
+    legend.AddEntry(numLQ_hist2, 'MET < ' + str(MET_bounds[1]) + ' GeV', 'L')
+    legend.AddEntry(numLQ_hist3, 'MET < ' + str(MET_bounds[2]) + ' GeV', 'L')
+    
+    canv2 = ROOT.TCanvas('canv2', 'canv2')
+    numLQ_hist1.Draw("hist")
+    numLQ_hist2.Draw("histsame")
+    numLQ_hist3.Draw("histsame")
+    legend.Draw("same")
+
+    if args.genCut:
+	canv2.Print("savedPlots/METPlots/GENSIM_METPlots/GENSIM_numLQ_" + LQParams + 'comparison_50METCut.png') 
+
+    else:
+	canv2.Print("savedPlots/METPlots/GENSIM_METPlots/GENSIM_numLQ_" + LQParams + 'comparison_noMETCut.png') 
+	
 
 print('Drawing the histograms and saving the ROOT file...')
 canv = ROOT.TCanvas('canv', 'canv')
 MET_hist.Draw("hist")
-canv.Print('savedPlots/METPlots/GENSIM_METPlots/GENSIM_MET_' + LQParams + 'newTrial_noMETCut.png')
 
-canv2 = ROOT.TCanvas('canv2', 'canv2')
-numLQ_hist1.Draw("hist")
-numLQ_hist2.Draw("histsame")
-numLQ_hist3.Draw("histsame")
-legend.Draw("same")
+if args.genCut:
+    canv.Print('savedPlots/METPlots/GENSIM_METPlots/GENSIM_MET_' + LQParams + '_50METCut.png')
 
-canv2.Print("savedPlots/METPlots/GENSIM_METPlots/GENSIM_numLQ_" + LQParams + 'comparison_50METCut.png') 
+else:
+    canv.Print('savedPlots/METPlots/GENSIM_METPlots/GENSIM_MET_' + LQParams + '_noMETCut.png')
 
 fout.Write()
 
