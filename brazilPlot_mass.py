@@ -1,14 +1,7 @@
-#Script for drawing Brazilian plot for different mass points
+#Module for drawing Brazilian plot for different mass points
 
 import ROOT
 import numpy as np
-
-upperbounds95 = np.array([0.1577, 0.4951, 1.3025, 4.3090]) 
-upperbounds68 = np.array([0.1185, 0.3704, 0.9725, 3.1887])
-lowerbounds68 = np.array([0.0617, 0.1910, 0.5000, 1.6267])
-lowerbounds95 = np.array([0.0464, 0.1432, 0.3748, 1.2255])
-median_exclusion = np.array([0.0854, 0.2656, 0.6953, 2.2734])
-mass_points = np.array([500, 1000, 1400, 2000])
 
 def cmsText(pad):
     cmsText = 'CMS'
@@ -29,7 +22,8 @@ def cmsText(pad):
  
     extraOverCmsTextSize  = 0.76
  
-    lumi_13TeV = "35.9 fb^{-1}"
+    #lumi_13TeV = "35.9 fb^{-1}"
+    lumi_13TeV = "137 fb^{-1}"
 
     align_ = 13
 
@@ -70,7 +64,7 @@ def cmsText(pad):
   
     pad.Update()
 
-def plotLimits(values):
+def plotLimits(values, upperbounds95, upperbounds68, median_exclusion, lowerbounds68, lowerbounds95):
     
     N = len(values)
     yellow = ROOT.TGraph(2*N)
@@ -164,8 +158,4 @@ def plotLimits(values):
     print("Done!")
     c.SaveAs("LQBraPlot_mass.png")
     c.Close()
-
-plotLimits(mass_points)
-
-
 

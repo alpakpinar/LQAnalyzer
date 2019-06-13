@@ -1,15 +1,7 @@
-#Script for drawing Brazilian plot for different coupling points
+#Module for drawing Brazilian plot for different coupling points
 
 import ROOT
 import numpy as np
-
-upperbounds95 = np.array([4.7363, 2.5368, 1.3025, 0.4839]) 
-upperbounds68 = np.array([3.5192, 1.8849, 0.9725, 0.3596])
-lowerbounds68 = np.array([1.8146, 0.9719, 0.5000, 0.1854])
-lowerbounds95 = np.array([1.3603, 0.7286, 0.3748, 0.1390])
-median_exclusion = np.array([2.5234, 1.3516, 0.6953, 0.2578])
-
-couplings = np.array([0.5, 0.7, 1, 1.5])
 
 def cmsText(pad):
     cmsText = 'CMS'
@@ -30,7 +22,8 @@ def cmsText(pad):
  
     extraOverCmsTextSize  = 0.76
  
-    lumi_13TeV = "35.9 fb^{-1}"
+    #lumi_13TeV = "35.9 fb^{-1}"
+    lumi_13TeV = "137 fb^{-1}"
 
     align_ = 13
 
@@ -71,7 +64,7 @@ def cmsText(pad):
   
     pad.Update()
 
-def plotLimits(values):
+def plotLimits(values, upperbounds95, upperbounds68, median_exclusion, lowerbounds68, lowerbounds95):
     
     N = len(values)
     yellow = ROOT.TGraph(2*N)
@@ -164,8 +157,4 @@ def plotLimits(values):
     print("Done!")
     c.SaveAs("LQBraPlot2_Coup.png")
     c.Close()
-
-plotLimits(couplings)
-
-
 
