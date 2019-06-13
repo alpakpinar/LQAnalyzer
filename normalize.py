@@ -18,9 +18,9 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True):
 
         os.mkdir(pngDir) 
  
-    labels = ['1_4TeV_0_5', '1_4TeV_0_7', '1_4TeV_1', '1_4TeV_1_5', '0_5TeV_1', '1TeV_1', '2TeV_1']
-    xsections = [0.003762, 0.007397, 0.01542, 0.04106, 2.294, 0.09211, 0.001973]
-    numEvents = [50000, 50000, 49500, 50000, 49750, 50000, 49750]    
+    labels = ['0_5TeV_0_5', '1_4TeV_0_5', '1_4TeV_0_7', '1_4TeV_1', '1_4TeV_1_5', '0_5TeV_1', '1TeV_1', '2TeV_1', '2TeV_1_5']
+    xsections = [0.6892, 0.003762, 0.007397, 0.01542, 0.04106, 2.294, 0.09211, 0.001973, 0.005347]
+    numEvents = [50000, 50000, 50000, 49500, 50000, 49750, 50000, 49750, 49750]    
 
     crossSections = {}
     num_events_gen = {}    
