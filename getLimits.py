@@ -26,10 +26,10 @@ def lineReplace(file_path, subst, lineIndex=8):
 parser = argparse.ArgumentParser()
 parser.add_argument('-m', '--const_mass', help = 'Calculate the limits for a constant mass of 1.4 TeV', action ='store_true')
 parser.add_argument('-c', '--const_coupling', help = 'Calculate the limits for a constant coupling of 1', action = 'store_true')
-parser.add_argument('--draw', help = 'Draw the Brazilian Plot', action = 'store_true')
+parser.add_argument('--data2016', help = 'Run combine over 2016 data only', action = 'store_true')
 args = parser.parse_args()
 
-def getLimits(LQParams):
+def getLimits(LQParams, data2016=False):
 
     file_path = 'inputs/convert_to_ws.py'
 
@@ -47,24 +47,44 @@ def getLimits(LQParams):
     os.chdir('../')
 
     ################
-    #Running combine on the modified LQ file (with the whole RunII data)
-    print('##################')
-    print('Running combine -M AsymptoticLimits monojet_card.txt -t -1 --setParameters lumiscale=3.8 --freezeParameter lumiscale for ' + LQParams)
-    print('##################')
+    #Running combine on the modified LQ file
 
-    command = 'combine -M AsymptoticLimits monojet_card.txt -t -1 --setParameters lumiscale=3.8 --freezeParameter lumiscale'
-    p = subprocess.Popen(command.split(), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, universal_newlines = True)
-    out = p.communicate()[0]
+    if data2016:
+	
+	print('##################')
+	print('Running combine -M AsymptoticLimits monojet_card.txt -t -1 --setParameters lumiscale=1.0 --freezeParameter lumiscale for ' + LQParams)
+	print('##################')
 
-    output = out.split('\n')
+	command = 'combine -M AsymptoticLimits monojet_card.txt -t -1 --setParameters lumiscale=1.0 --freezeParameter lumiscale'
+	p = subprocess.Popen(command.split(), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, universal_newlines = True)
+	out = p.communicate()[0]
 
-    for i in range(-10, -2):
-	print(output[i])
+	output = out.split('\n')
 
-    return output[-10:-2]
+	for i in range(-10, -2):
+	    print(output[i])
+
+	return output[-10:-2]
+
+    else:
+
+	print('##################')
+	print('Running combine -M AsymptoticLimits monojet_card.txt -t -1 --setParameters lumiscale=3.8 --freezeParameter lumiscale for ' + LQParams)
+	print('##################')
+
+	command = 'combine -M AsymptoticLimits monojet_card.txt -t -1 --setParameters lumiscale=3.8 --freezeParameter lumiscale'
+	p = subprocess.Popen(command.split(), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, universal_newlines = True)
+	out = p.communicate()[0]
+
+	output = out.split('\n')
+
+	for i in range(-10, -2):
+	    print(output[i])
+
+	return output[-10:-2]
 
 
-def drawLimits(params, constMass, constCoupling):
+def drawLimits(params, constMass, constCoupling, data2016=False):
     
     upperbounds95 = []
     upperbounds68 = []
@@ -75,7 +95,7 @@ def drawLimits(params, constMass, constCoupling):
     coupling_points = [0.5, 0.7, 1, 1.5]
 
     for param in params:
-	output = getLimits(param)
+	output = getLimits(param, data2016)
 
 	upperbounds95.append(float(output[-2].split()[-1]))
 	upperbounds68.append(float(output[-3].split()[-1]))
@@ -98,16 +118,30 @@ def drawLimits(params, constMass, constCoupling):
 
 ###################
 
-if args.const_mass and args.draw:
-    print('Working on samples with M = 1.4 TeV')
-    params = ['1_4TeV_0_5', '1_4TeV_0_7', '1_4TeV_1', '1_4TeV_1_5']
-    drawLimits(params, constMass=True, constCoupling=False)
+if args.const_mass:
+    if args.data2016:
+	print('Running combine over 2016 data only!')
+	print('Working on samples with M = 1.4 TeV')
+	params = ['1_4TeV_0_5', '1_4TeV_0_7', '1_4TeV_1', '1_4TeV_1_5']
+	drawLimits(params, constMass=True, constCoupling=False, data2016=True)
 
-elif args.const_coupling and args.draw:
-    print('Working on samples with coupling 1')
-    params = ['0_5TeV_1', '1TeV_1', '1_4TeV_1', '2TeV_1']
-    drawLimits(params, constMass=False, constCoupling=True)
+    else:
+	print('Working on samples with M = 1.4 TeV')
+	params = ['1_4TeV_0_5', '1_4TeV_0_7', '1_4TeV_1', '1_4TeV_1_5']
+	drawLimits(params, constMass=True, constCoupling=False)
 
+
+elif args.const_coupling: 
+    if args.data2016:
+	print('Running combine over 2016 data only!')
+	print('Working on samples with coupling 1')
+	params = ['0_5TeV_1', '1TeV_1', '1_4TeV_1', '2TeV_1']
+	drawLimits(params, constMass=False, constCoupling=True, data2016=True)
+
+    else:
+	print('Working on samples with coupling 1')
+	params = ['0_5TeV_1', '1TeV_1', '1_4TeV_1', '2TeV_1']
+	drawLimits(params, constMass=False, constCoupling=True) 
 
 
 
