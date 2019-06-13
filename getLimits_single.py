@@ -11,12 +11,13 @@ def lineReplace(file_path, subst, lineIndex=8):
     with open(file_path, 'r') as f:
 	lines = f.readlines()
 
-    params = ['0_5TeV_0_5', '0_5TeV_1', '1TeV_1', '2TeV_1', '2TeV_1_5', '1_4TeV_0_5', '1_4TeV_0_7', '1_4TeV_1_5', '1_4TeV_1']
+    params = ['0_5TeV_0_5', '0_5TeV_1', '1TeV_1', '2TeV_1_5', '2TeV_1', '1_4TeV_0_5', '1_4TeV_0_7', '1_4TeV_1_5', '1_4TeV_1']
 
     for param in params:
 	if param in lines[lineIndex]:
 
 	    lines[lineIndex] = lines[lineIndex].split(param)[0] + subst + lines[lineIndex].split(param)[1] #Changing the relevant line
+	    break
 
     with open(file_path, 'w') as f:
 	f.writelines(lines)
