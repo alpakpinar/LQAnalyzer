@@ -24,6 +24,7 @@ def lineReplace(file_path, subst, lineIndex=8):
 parser = argparse.ArgumentParser()
 parser.add_argument('-m', '--mass', help = 'Mass of the LQ sample to be analyzed (Enter with an underscore)')
 parser.add_argument('-c', '--coupling', help = 'Coupling of the LQ sample to be analyzed (Enter with an underscore)')
+parser.add_argument('--data2016', help = 'Run combine over 2016 data only', action = 'store_true')
 
 args = parser.parse_args()
 
@@ -44,19 +45,36 @@ subprocess.call(command.split())
 os.chdir('../')
 
 ################
-#Running combine on the modified LQ file (with the whole RunII data)
-print('##################')
-print('Running combine -M AsymptoticLimits monojet_card.txt -t -1 --setParameters lumiscale=3.8 --freezeParameter lumiscale for ' + LQParams)
-print('##################')
+#Running combine on the modified LQ file
 
-command = 'combine -M AsymptoticLimits monojet_card.txt -t -1 --setParameters lumiscale=3.8 --freezeParameter lumiscale'
-p = subprocess.Popen(command.split(), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, universal_newlines = True)
-out = p.communicate()[0]
+if args.data2016:
+    print('##################')
+    print('Running combine -M AsymptoticLimits monojet_card.txt -t -1 --setParameters lumiscale=1.0 --freezeParameter lumiscale for ' + LQParams)
+    print('##################')
 
-output = out.split('\n')
+    command = 'combine -M AsymptoticLimits monojet_card.txt -t -1 --setParameters lumiscale=1.0 --freezeParameter lumiscale'
+    p = subprocess.Popen(command.split(), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, universal_newlines = True)
+    out = p.communicate()[0]
 
-for i in range(-9, -2):
-    print(output[i])
+    output = out.split('\n')
+
+    for i in range(-10, -2):
+	print(output[i])
+
+else:
+     
+    print('##################')
+    print('Running combine -M AsymptoticLimits monojet_card.txt -t -1 --setParameters lumiscale=3.8 --freezeParameter lumiscale for ' + LQParams)
+    print('##################')
+
+    command = 'combine -M AsymptoticLimits monojet_card.txt -t -1 --setParameters lumiscale=3.8 --freezeParameter lumiscale'
+    p = subprocess.Popen(command.split(), stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE, universal_newlines = True)
+    out = p.communicate()[0]
+
+    output = out.split('\n')
+
+    for i in range(-10, -2):
+	print(output[i])
 
 
 
