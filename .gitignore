@@ -5,6 +5,7 @@
 
 #Ignore ROOT files in the repo directory
 /*.root
+.__afs*
 
 savedPlots/
 higgsRootFiles/
