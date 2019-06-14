@@ -14,7 +14,6 @@ LQ\_NANOAnalyzer.py takes multiple arguments:
 
 ```
 python LQ_NANOAnalyzer.py -m 1_4 -c 1
-
 ```
 
 If the program is to be run only on one trial file, -t or --trial option should be used.
@@ -35,17 +34,13 @@ By default, both getLimits\_single.py and getLimits.py calculate the limits on t
 
 ```
 python getLimits_single.py -m 2 -c 1 --data2016
-
 ```
  
 ## Analyzing LQ Gen-Level Samples
 
 For analyzing Gen-Level samples, LQ\_GENSIMAnalyzer.py should be used. Similar to LQ\_NANOAnalyzer.py, this script takes arguments -m and -c that specifies the mass and the coupling of the samples to be analyzed, and draws MET and numLQ histograms.
-
-This program does not put any additional cuts on the samples. It operates on two kinds of samples: 
-
-    Samples with MET > 50 GeV cut
-    Samples with no MET cut 
+ 
+This program does not put any additional cuts on the samples. It operates on two kinds of samples: Samples with MET > 50 GeV cut, samples with no MET cut 
 
 To operate on the former, --genCut option must be specified. If this option is not specified, program will run on samples with no MET cut.
 
@@ -57,7 +52,6 @@ As an example, if the program is to run over LQ samples with mass 1 TeV and coup
 
 ```
 python LQ_GENSIMAnalyzer.py -m 1 -c 1_5 --genCut --LQhist
-
 ``` 
 
 
