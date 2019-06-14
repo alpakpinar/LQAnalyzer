@@ -3,7 +3,7 @@
 import ROOT
 import os
 
-def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True): 
+def drawHist(filename, LQParams, binWidthDiv=False, fillHist=False, saveHistToROOT=True): 
     
     #No stat box
     ROOT.gStyle.SetOptStat(0)
@@ -48,15 +48,20 @@ def drawHist(filename, LQParams, fillHist=False, saveHistToROOT=True):
     avgBinWidth = 0
     METHist = mydir.Get('MET;1')
 
-    for i in range(METHist.GetNbinsX()):
-        original_cont = METHist.GetBinContent(i+1)
-        bin_width = METHist.GetBinWidth(i+1)
-        avgBinWidth += bin_width
-        METHist.SetBinContent(i+1, original_cont/bin_width)
+    if binWidthDiv:
 
-    avgBinWidth /= METHist.GetNbinsX()
-    METHist.Scale(norm_weight)
-    METHist.GetYaxis().SetTitle('Number of Events / GeV')
+	for i in range(METHist.GetNbinsX()):
+	    original_cont = METHist.GetBinContent(i+1)
+	    bin_width = METHist.GetBinWidth(i+1)
+	    avgBinWidth += bin_width
+	    METHist.SetBinContent(i+1, original_cont/bin_width)
+	
+	avgBinWidth /= METHist.GetNbinsX()
+	METHist.GetYaxis().SetTitle('Number of Events / GeV')
+    
+    else:
+	METHist.Scale(norm_weight)
+	METHist.GetYaxis().SetTitle('Number of Events')
 
     if fillHist:
         METHist.SetFillStyle(1001)
