@@ -24,7 +24,9 @@ from numpy import arange, zeros, array
 parser = argparse.ArgumentParser()
 parser.add_argument('-m', '--mass', help = 'Mass of the LQ sample in TeV (Enter with an underscore)')
 parser.add_argument('-c', '--coupling', help = 'Coupling of the LQ sample (Enter with an underscore)')
-parser.add_argument('--trial', help = 'Runs only over the trial file', action = 'store_true')
+parser.add_argument('-t', '--trial', help = 'Runs only over the trial file', action = 'store_true')
+parser.add_argument('-w', '--writeToTxt', help = 'Write the event yields to .txt file', action = 'store_true')
+parser.add_argument('-b', '--binWidthDiv', help = 'Divide the MET histogram by the bin width', action = 'store_true')
 
 args = parser.parse_args()
 
@@ -341,7 +343,13 @@ p.run()
 
 eventCountGraph.drawEventGraph(filename, LQParams)
 
-normalize.drawHist(filename, LQParams) 
+if args.binWidthDiv:
+
+    normalize.drawHist(filename, LQParams, binWidthDiv=True) #Divide the histogram by the bin width
+
+else:
+ 
+    normalize.drawHist(filename, LQParams)
 
 #Get the final ratio of events selected for this run
 
@@ -353,18 +361,20 @@ print('Total number of events selected: %d' % eventCounts[-1])
 passRatio = float(eventCounts[-1]*100/eventCounts[0]) 
 print('Percentage of events selected: %2.2f' % passRatio + '%')
 
-#Write the event yields to a text file
-txtfileName = 'EventAcceptances.txt'
+if args.writeToTxt:
+    #Write the event yields to a text file
+    txtfileName = 'EventAcceptances.txt'
 
-txtFile = open(txtfileName, 'a+')
-if '#####Event Acceptances#####' not in txtFile.read():
+    txtFile = open(txtfileName, 'a+')
+    if '#####Event Acceptances#####' not in txtFile.read():
 
-    txtFile.write('#####Event Acceptances#####')
-    txtFile.write('LQ Parameters     Total Number of Events    Accepted Number of Events    Passing Ratio (%)')
+	txtFile.write('#####Event Acceptances#####')
+	txtFile.write('LQ Parameters     Total Number of Events    Accepted Number of Events    Passing Ratio (%)')
 
-txtFile.write('{0:<15s} {1:<10d} {2:<10d} {3:<10.2f}'.format(LQParams, int(eventCounts[0]), int(eventCounts[-1]), passRatio) + '\n') 
- 
-print('Wrote the event yield result to ' + txtfileName)
+    txtFile.write('{0:<15s} {1:<10d} {2:<10d} {3:<10.2f}'.format(LQParams, int(eventCounts[0]), int(eventCounts[-1]), passRatio) + '\n') 
+     
+    print('Wrote the event yield result to ' + txtfileName)
+
 print('#################################')
 
 
