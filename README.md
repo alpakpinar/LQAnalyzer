@@ -26,11 +26,11 @@ By default, the program draws histograms that are not bin-width divided, due to 
 
 To get the exclusion limits, combine command should be run on the modified output of LQ\_NANOAnalyzer.py. The modification of the output and running combine can be done at the same time by running one of two scripts: getLimits.py and getLimits\_single.py 
 
-To get the exclusion limits for a single case, getLimits\_single.py should be used, providing the mass and the coupling with options -m and -c. 
+To get the upper limits on signal strength for a single case, getLimits\_single.py should be used, providing the mass and the coupling with options -m and -c. 
 
 If the combine command is to be run on multiple files and the exclusion plots are to be drawn, getLimits.py should be used for this purpose. If this program is called with an option -m or --const\_mass, it will calculate the limits and draw the histograms for 4 different samples with 1.4 TeV mass. If it is called with an option -c or --const\_coupling, it will do the same job for 4 different samples with a coupling of 1.
 
-By default, both getLimits\_single.py and getLimits.py calculate the limits on the whole Run 2 data taken by CMS (2016-2018). If only 2016 data is to be used, --data2016 option should be specified. So, the following program will calculate the exclusion limits for a mass of 2 TeV and coupling 1, using only the data taken at 2016:
+By default, both getLimits\_single.py and getLimits.py calculate the limits on the whole Run 2 data taken by CMS (2016-2018). If only 2016 data is to be used, --data2016 option should be specified. So, the following program will calculate the upper limits on signal strength for a mass of 2 TeV and coupling 1, using only the data taken at 2016:
 
 ```
 python getLimits_single.py -m 2 -c 1 --data2016
