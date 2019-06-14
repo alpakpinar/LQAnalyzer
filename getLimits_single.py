@@ -11,7 +11,7 @@ def lineReplace(file_path, subst, lineIndex=8):
     with open(file_path, 'r') as f:
 	lines = f.readlines()
 
-    params = ['0_5TeV_0_5', '0_5TeV_1', '1TeV_1', '2TeV_1_5', '2TeV_1', '1_4TeV_0_5', '1_4TeV_0_7', '1_4TeV_1_5', '1_4TeV_1']
+    params = ['0_5TeV_0_5', '0_5TeV_1', '1TeV_1', '2TeV_1_5', '2TeV_1', '1_4TeV_0_5', '1_4TeV_0_7', '1_4TeV_1_5', '1_4TeV_1', '2_25TeV_1', '2_5TeV_1_2', '1_75TeV_0_8', '1_5TeV_0_6', '1_25TeV_0_4']
 
     for param in params:
 	if param in lines[lineIndex]:
@@ -49,6 +49,7 @@ os.chdir('../')
 #Running combine on the modified LQ file
 
 if args.data2016:
+
     print('##################')
     print('Running combine -M AsymptoticLimits monojet_card.txt -t -1 --setParameters lumiscale=1.0 --freezeParameter lumiscale for ' + LQParams)
     print('##################')
