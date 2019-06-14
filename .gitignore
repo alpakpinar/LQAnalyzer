@@ -1,0 +1,13 @@
+#Ignore compiled Python code
+*.pyc
+
+*.png
+
+#Ignore ROOT files in the repo directory
+/*.root
+
+savedPlots/
+higgsRootFiles/
+brazilianPlot/
+backupScripts/
+
