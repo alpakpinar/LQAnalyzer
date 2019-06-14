@@ -6,13 +6,13 @@ cat  = "monojet"
 
 th1name = "hQCD_MonoJ"
 
-fdir = ROOT.TFile('GENSIM_MET_1_25TeV_0_4_50METCut.root', 'READ')
+fdir = ROOT.TFile('GENSIM_RootFiles/GENSIM_MET_1_25TeV_0_4_50METCut.root', 'READ')
 
 wsin_combine = ROOT.RooWorkspace("monoxLQ","monoxLQ")
 wsin_combine._import = SafeWorkspaceImporter(wsin_combine)#getattr(wsin_combine,"import")
 
 #obj = fdir.plots.Get("MET")
-obj = fdir.Get("MET;2")
+obj = fdir.Get("MET")
 obj.Scale(1/1.6) #Only for GEN level histos! 
 nbins = obj.GetNbinsX()
 varl = ROOT.RooRealVar("met_"+cat,"met_"+cat,0,100000);
