@@ -25,7 +25,10 @@ By default, the program draws histograms that are not bin-width divided, due to 
 
 For analyzing Gen-Level samples, LQ\_GENSIMAnalyzer.py should be used. Similar to LQ\_NANOAnalyzer.py, this script takes arguments -m and -c that specifies the mass and the coupling of the samples to be analyzed, and draws MET and numLQ histograms.
  
-This program does not put any additional cuts on the samples. It operates on two kinds of samples: Samples with MET > 50 GeV cut, samples with no MET cut 
+This program does not put any additional cuts on the samples. It operates on two kinds of samples: 
+
+- Samples with MET > 50 GeV cut at the gen-level
+- Samples with no MET cut at the gen-level
 
 To operate on the former, --genCut option must be specified. If this option is not specified, program will run on samples with no MET cut.
 
