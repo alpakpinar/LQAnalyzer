@@ -26,21 +26,32 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-m', '--mass', help = 'Mass of the LQ sample to be analyzed (Enter with an underscore)')
 parser.add_argument('-c', '--coupling', help = 'Coupling of the LQ sample to be analyzed (Enter with an underscore)')
 parser.add_argument('--data2016', help = 'Run combine over 2016 data only', action = 'store_true')
+parser.add_argument('--genLevel', help = 'Running over gen-level samples', action = 'store_true')
 
 args = parser.parse_args()
 
 LQParams = args.mass + 'TeV_' + args.coupling
-file_path = 'inputs/convert_to_ws.py'
-
-#Modifying convert_to_ws.py file
-lineReplace(file_path, LQParams)
 
 os.chdir('inputs')
 
 #Running convert_to_ws.py file
-print('Running convert_to_ws.py')
 
-command = 'python convert_to_ws.py'
+if args.genLevel:
+    file_path = 'convert_to_ws_GEN.py'
+    #Modifying convert_to_ws.py file
+    lineReplace(file_path, LQParams)
+
+    print('Running convert_to_ws_GEN.py')
+    command = 'python convert_to_ws_GEN.py'
+    
+else:
+    file_path = 'convert_to_ws.py'
+    #Modifying convert_to_ws.py file
+    lineReplace(file_path, LQParams)
+
+    print('Running convert_to_ws.py')
+    command = 'python convert_to_ws.py'
+
 subprocess.call(command.split())
 
 os.chdir('../')
