@@ -1,0 +1,8 @@
+Starting job on  Wed Jun 5 13:28:08 CDT 2019
+Running on  Linux cmslpc26.fnal.gov 2.6.32-754.12.1.el6.x86_64 #1 SMP Tue Apr 9 08:24:46 CDT 2019 x86_64 x86_64 x86_64 GNU/Linux
+System release  Scientific Linux Fermi release 6.10 (Ramsey)
+name: cards/sleptoquark_uv_cards/
+carddir: 
+queue: local
+scram_arch: slc6_amd64_gcc630
+cmssw_version: CMSSW_9_3_8
