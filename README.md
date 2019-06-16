@@ -62,4 +62,26 @@ By default, both getLimits\_single.py and getLimits.py calculate the limits on t
 python getLimits_single.py -m 2 -c 1 --data2016
 ```
 
- 
+### Commands to Setup and Run The Combine Tool (@LXPlus)
+
+```
+cmsrel CMSSW_8_1_0
+cd CMSSW_8_1_0/src
+cmsenv
+git clone https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
+cd HiggsAnalysis/CombinedLimit
+cd $CMSSW_BASE/src/HiggsAnalysis/CombinedLimit
+git fetch origin
+git checkout v7.0.13
+scramv1 b clean; scramv1 b # always make a clean build
+
+cd $CMSSW_BASE/src
+bash <(curl -s https://raw.githubusercontent.com/cms-analysis/CombineHarvester/master/CombineTools/scripts/sparse-checkout-ssh.sh)
+scram b -j 8
+
+mkdir analysis
+cd analysis
+cp -r /afs/cern.ch/user/z/zdemirag/public/forAlp/inputs .
+cp /afs/cern.ch/user/z/zdemirag/public/forAlp/monojet_card.txt .
+combine -M AsymptoticLimits monojet_card.txt -t -1
+``` 
